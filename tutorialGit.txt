@@ -1,0 +1,20 @@
+Tutorial Git creat new repository
+
+Create repository in github.
+1. Go to: https://github.com/new
+2. Choose repository name.
+3. Click on "Create repository".
+
+Initialize repository and push to origin
+1. Open terminal in project and write: git init
+2. Add all files to git: git add -A
+3. Commit all files to git: git commit -m "mesaj"
+4. Add remote repository from github: git remote add origin https://github.com/SergiuCl/coronaCases
+5. Push changes to origin: git push origin master
+
+Cum sa pui cod nou/modificat/sters:
+1. Modifici/adaugi/stergi fisierele.
+2. Commit code: git commit -a -m "mesaj"
+3. Push code: git push origin master
+
+
