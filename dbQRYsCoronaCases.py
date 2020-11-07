@@ -57,6 +57,7 @@ def update_cases_austria(APIData):
         insert_query_austria(APIData)
 
     
+    
 
 
 def update_cases_world(APIData):
