@@ -1,0 +1,29 @@
+Todos:
+- create function that retrieves information from corona cases api - done
+- store corona cases from api to database - done
+- periodically retrieve information from apis data about corona cases (maybe every 5 minutes) - done
+- make a page with corona cases per country - done
+- make a search field to filter the countries - done
+- make detail view page of each country
+
+Nice to have:
+- create cache layer between database and user
+
+site for table
+https://datatables.net/examples/styling/bootstrap4
+
+
+new api corona cases
+https://rapidapi.com/slotixsro-slotixsro-default/api/covid-19-tracking/endpoints
+
+old api corona cases
+https://rapidapi.com/Gramzivi/api/covid-19-data?endpoint=apiendpoint_e8b5ceb2-e0a9-40a0-b76e-dac9731931b8
+
+
+periodic task
+https://medium.com/greedygame-engineering/an-elegant-way-to-run-periodic-tasks-in-python-61b7c477b679
+
+
+subscribe
+- cand user ul insereaza un mail, verifica daca e deja in baza de date - daca e, printeaza flash message
+- cand user ul da unsubscribe, select user from database and if not bool, delete it

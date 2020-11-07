@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Cases In Austria
+{% endblock %}
+
+{% block headSergiu %}
+    <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+{% endblock %}
+
+{% block main %}
+    <div class="col">
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr style="background-color: cadetblue;">
+                    <th>Country</th>
+                    <th>Active Cases</th>
+                    <th>New Cases</th>
+                    <th>New Deaths</th>
+                    <th>Total Cases</th>
+                    <th>Total Deaths</th>
+                    <th>Total Recovered</th>
+                    <th>Last Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dict_item in casesAustria %}
+                <tr>
+                    {% for key, value in dict_item.items() %}
+                        {% if (key == "newDeaths" or key == "newCases") and value.startswith('+') %}
+                            <td style="color: red;"> {{ value }}</td>
+                        {% else %}
+                            <td> {{ value }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!--<iframe src="https://covid-19.dataflowkit.com/assets/widget/c19-widget-light.html" 
+	frameborder="0" scrolling="no"
+    width="400" height="250">-->
+    
+</iframe>
+<script>
+    $(document).ready(function() {
+        // trebuie scos search-ul
+        $('#example').DataTable({
+            "paging":   false,
+            "searching":   false
+        }); 
+    } );
+</script>
+{% endblock %}

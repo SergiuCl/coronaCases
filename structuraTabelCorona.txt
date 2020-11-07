@@ -1,0 +1,27 @@
+Tabel Countries
+id(PK):       	INTEGER, not null, auto increment
+country:	TEXT
+
+Table CasesHistory
+id(PK): INTEGER, not null, auto increment
+countryID(FK): INTEGER
+active: INTEGER
+new: INTEGER
+deaths: INTEGER
+totalRecovered: INTEGER
+totalCases: INTEGER
+totalDeaths: INTEGER
+
+====
+
+WorldCaseHistory
+id(PK): INTEGER, not null, auto increment
+country: TEXT
+active: INTEGER
+new: INTEGER
+deaths: INTEGER
+totalCases: INTEGER
+totalDeaths: INTEGER
+totalRecovered: INTEGER
+date: INTEGER -> unixepoch (https://www.sqlite.org/lang_datefunc.html)
+

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block headSergiu %}
+  <link href="mystyle.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    {% block main %}
+
+
+      <div class="row">
+        {% for news, des, i, content in context %}
+          <div class="col-sm-5 col-md-6 item-zoom">
+            <a href="/news/{{ news }}" target="_blank">
+              <div class="item-zoom">
+                <img src="{{i}}" alt="" class="img-fluid img-thumbnail">
+              </div>
+            </a>
+            <a href="/news/{{ news }}" target="_blank">
+              <h5>{{news}}</h5>
+            </a>
+            <a href="/news/{{ news }}" target="_blank">
+              <p>{{des}}</p>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% endblock %}
+{% endblock %}
