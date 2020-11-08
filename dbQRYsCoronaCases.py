@@ -63,8 +63,8 @@ def update_cases_austria(APIData):
 def update_cases_world(APIData):
     tblCasesWorld = "casesWorld"
     # get the values from table, WHERE country is "world" - that means the total number of cases
-    condition = "World"
-    tblValues = select_cases_where_country(tblCasesWorld, condition)
+    country = "World"
+    tblValues = select_cases_where_country(tblCasesWorld, country)
     # ensure dict is not None
     # if the value did not change, exit function
     # else, update the table
@@ -159,7 +159,7 @@ def insert_query(APIData):
                 totalDeaths=row['Total Deaths_text'],
                 totalRecovered=row['Total Recovered_text'],
                 lastUpdate=notAvailable)
-    db.commit()
+    #db.commit()
     # send an email to subscribers
     #email_to_subscribers(APIData[0]['Total Cases_text'], APIData[0]['New Cases_text'])
     email_to_subscribers()
@@ -234,7 +234,7 @@ def insert_into_history(APIData):
                 totalDeaths=row['Total Deaths_text'],
                 totalRecovered=row['Total Recovered_text'],
                 date=today)
-    db.commit()
+    #db.commit()
 
 '''
 def update_tblHistory(tblName, APIData, date):
@@ -263,45 +263,24 @@ def update_tblHistory(tblName, APIData, date):
 def update_query_world(APIData):
 
     for row in APIData:
-        if keyLastUpdate in row:
-            db.execute("""UPDATE casesWorld
-                            SET activeCases = :activeCases,
-                            newCases = :newCases,
-                            newDeaths = :newDeaths,
-                            totalCases = :totalCases,
-                            totalDeaths = :totalDeaths,
-                            totalRecovered = :totalRecovered,
-                            lastUpdate = :lastUpdate
-                            WHERE country= :countryName""",
+        db.execute("""UPDATE casesWorld
+                        SET active = :activeCases,
+                        new = :newCases,
+                        deaths = :newDeaths,
+                        totalCases = :totalCases,
+                        totalDeaths = :totalDeaths,
+                        totalRecovered = :totalRecovered,
+                        WHERE country= :countryName""",
                 
-                activeCases=row['Active Cases_text'],
-                newCases=row['New Cases_text'],
-                newDeaths=row['New Deaths_text'],
-                totalCases=row['Total Cases_text'],
-                totalDeaths=row['Total Deaths_text'],
-                totalRecovered=row['Total Recovered_text'],
-                lastUpdate=row['Last Update'],
-                countryName=row['Country_text'])
-        else:
-            db.execute("""UPDATE casesWorld
-                            SET activeCases = :activeCases,
-                            newCases = :newCases,
-                            newDeaths = :newDeaths,
-                            totalCases = :totalCases,
-                            totalDeaths = :totalDeaths,
-                            totalRecovered = :totalRecovered,
-                            lastUpdate = :lastUpdate
-                            WHERE country= :countryName""",
-                
-                activeCases=row['Active Cases_text'],
-                newCases=row['New Cases_text'],
-                newDeaths=row['New Deaths_text'],
-                totalCases=row['Total Cases_text'],
-                totalDeaths=row['Total Deaths_text'],
-                totalRecovered=row['Total Recovered_text'],
-                lastUpdate=notAvailable,
-                countryName=row['Country_text'])
-    db.commit()
+            activeCases=int(row['Active Cases_text']),
+            newCases=int(row['New Cases_text'][1:]),
+            newDeaths=int(row['New Deaths_text'][1:]),
+            totalCases=int(row['Total Cases_text']),
+            totalDeaths=int(row['Total Deaths_text']),
+            totalRecovered=int(row['Total Recovered_text']),
+            countryName=row['Country_text'])
+
+    #db.commit()
 
 
 def select_cases(tableName):
