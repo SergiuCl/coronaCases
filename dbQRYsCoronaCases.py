@@ -14,15 +14,6 @@ notAvailable = "N/A"
 keyLastUpdate = "Last Update"
 
 
-def get_cases_austria():
-
-    # load the data in JSON
-    casesAustria = get_API_News_austria()
-    
-    # call the function to update table
-    update_cases_austria(casesAustria)
-
-
 
 def get_cases_world():
 
@@ -82,48 +73,6 @@ def update_cases_world(APIData):
         #insert_into_history(APIData)
 
 
-def update_query_austria(APIData):
-    
-    # for each row in APIData
-    # ensure key 'Last Update' exists in dict
-    # if exists - insert all the values into the table casesWorld
-    # if not - insert N/A into 'Last Update'
-    if keyLastUpdate in APIData:
-        db.execute("""UPDATE casesInAustria
-                        SET activeCases = :activeCases, 
-                        newCases = :newCases, 
-                        newDeaths = :newDeaths, 
-                        totalCases = :totalCases, 
-                        totalDeaths = :totalDeaths, 
-                        totalRecovered = :totalRecovered, 
-                        lastUpdate = :lastUpdate""",
-
-            activeCases=APIData['Active Cases_text'], 
-            newCases=APIData['New Cases_text'], 
-            newDeaths=APIData['New Deaths_text'], 
-            totalCases=APIData['Total Cases_text'], 
-            totalDeaths=APIData['Total Deaths_text'], 
-            totalRecovered=APIData['Total Recovered_text'], 
-            lastUpdate=APIData['Last Update'])
-    else:
-        db.execute("""UPDATE casesInAustria
-                        SET activeCases = :activeCases, 
-                        newCases = :newCases, 
-                        newDeaths = :newDeaths, 
-                        totalCases = :totalCases, 
-                        totalDeaths = :totalDeaths, 
-                        totalRecovered = :totalRecovered, 
-                        lastUpdate = :lastUpdate""",
-
-            activeCases=APIData['Active Cases_text'], 
-            newCases=APIData['New Cases_text'], 
-            newDeaths=APIData['New Deaths_text'], 
-            totalCases=APIData['Total Cases_text'], 
-            totalDeaths=APIData['Total Deaths_text'], 
-            totalRecovered=APIData['Total Recovered_text'], 
-            lastUpdate=notAvailable)
-
-
 
 def insert_query(APIData):
 
@@ -147,38 +96,6 @@ def insert_query(APIData):
     #email_to_subscribers(APIData[0]['Total Cases_text'], APIData[0]['New Cases_text'])
     email_to_subscribers()
 
-def insert_query_austria(APIData):
-
-    # for each row in APIData
-    # ensure key 'Last Update' exists in dict
-    # if exists - insert all the values into the table casesWorld
-    # if not - insert N/A into 'Last Update'
-    if keyLastUpdate in APIData:
-        db.execute("""INSERT INTO casesInAustria
-                        (country, activeCases, newCases, newDeaths, totalCases, totalDeaths, totalRecovered, lastUpdate)
-                        VALUES(:countryName, :activeCases, :newCases, :newDeaths, :totalCases, :totalDeaths, :totalRecovered, :lastUpdate)""",
-
-            countryName=APIData['Country_text'], 
-            activeCases=APIData['Active Cases_text'],
-            newCases=APIData['New Cases_text'],
-            newDeaths=APIData['New Deaths_text'],
-            totalCases=APIData['Total Cases_text'],
-            totalDeaths=APIData['Total Deaths_text'],
-            totalRecovered=APIData['Total Recovered_text'],
-            lastUpdate=APIData['Last Update'])
-    else:
-        db.execute("""INSERT INTO casesInAustria
-                        (country, activeCases, newCases, newDeaths, totalCases, totalDeaths, totalRecovered, lastUpdate)
-                        VALUES(:countryName, :activeCases, :newCases, :newDeaths, :totalCases, :totalDeaths, :totalRecovered, :lastUpdate)""",
-
-            countryName=APIData['Country_text'], 
-            activeCases=APIData['Active Cases_text'],
-            newCases=APIData['New Cases_text'],
-            newDeaths=APIData['New Deaths_text'],
-            totalCases=APIData['Total Cases_text'],
-            totalDeaths=APIData['Total Deaths_text'],
-            totalRecovered=APIData['Total Recovered_text'],
-            lastUpdate=notAvailable)
 
 
 def insert_into_history(APIData):
@@ -217,7 +134,7 @@ def insert_into_history(APIData):
                 totalDeaths=row['Total Deaths_text'],
                 totalRecovered=row['Total Recovered_text'],
                 date=today)
-    #db.commit()
+    db.commit()
 
 '''
 def update_tblHistory(tblName, APIData, date):
@@ -264,13 +181,13 @@ def update_query_world(APIData):
             countryName=row['Country_text'],
             date=select_unixepoch_date())
 
-    #db.commit()
+    db.commit()
 
 
 def select_cases(tableName):
 
     # make a select query and save the result in result
-    result = db.execute("SELECT * FROM :tableName", tableName=tableName)
+    result = db.execute("SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM :tableName", tableName=tableName)
     return result
 
 
@@ -289,7 +206,7 @@ def select_cases_where_country_date(tableName, country, date):
 
 def select_unixepoch_date():
 
-    unixepochDate = select strftime('%s', 'now')
+    unixepochDate = db.execute("select strftime('%s', 'now')")
     return unixepochDate
 
 
