@@ -84,3 +84,21 @@ def get_API_News_world():
 
     return casesWorld
 
+
+def convert_to_int(str):
+    
+    # check if str is empty or N/A
+    # if yes, return an empty string
+    # else replace comma with space and convert the str into an int
+    if not str or str == "N/A":
+        s = ''
+        return s
+    else:
+        s = str.replace(",", "")
+
+        if "+" in s:
+            s.replace("+" , "")
+
+        i = int(s)
+
+    return i

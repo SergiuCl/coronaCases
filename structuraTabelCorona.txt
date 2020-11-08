@@ -25,3 +25,9 @@ totalDeaths: INTEGER
 totalRecovered: INTEGER
 date: INTEGER -> unixepoch (https://www.sqlite.org/lang_datefunc.html)
 
+
+OLD CREATE:
+CREATE TABLE historyWorld (country TEXT, activeCases TEXT, newCases TEXT, newDeaths TEXT, totalCases TEXT, totalDeaths TEXT, totalRecovered TEXT, date TEXT)
+CREATE TABLE casesWorld (country TEXT, activeCases TEXT, newCases TEXT, newDeaths TEXT, totalCases TEXT, totalDeaths TEXT, totalRecovered TEXT, lastUpdate TEXT)
+CREATE TABLE subscribers (subscriber_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, emailAdress text NOT NULL, Name text NOT NULL, country TEXT)
+

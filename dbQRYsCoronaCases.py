@@ -1,5 +1,5 @@
 from cs50 import SQL
-from helpers import get_API_News_austria, get_API_News_world
+from helpers import get_API_News_austria, get_API_News_world, convert_to_int
 from datetime import date
 from send import email_to_subscribers
 import http.client
@@ -130,8 +130,8 @@ def insert_query(APIData):
     # for each row in APIData
     for row in APIData:
         db.execute("""INSERT INTO casesWorld
-                        (country, active, new, deaths, totalCases, totalDeaths, totalRecovered)
-                        VALUES(:countryName, :activeCases, :newCases, :newDeaths, :totalCases, :totalDeaths, :totalRecovered)""",
+                        (country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date)
+                        VALUES(:countryName, :activeCases, :newCases, :newDeaths, :totalCases, :totalDeaths, :totalRecovered, :date)""",
                     
             countryName=row['Country_text'],
             activeCases=convert_to_int(row['Active Cases_text']),
@@ -139,7 +139,8 @@ def insert_query(APIData):
             newDeaths=convert_to_int(row['New Deaths_text']),
             totalCases=convert_to_int(row['Total Cases_text']),
             totalDeaths=convert_to_int(row['Total Deaths_text']),
-            totalRecovered=convert_to_int(row['Total Recovered_text']))
+            totalRecovered=convert_to_int(row['Total Recovered_text']),
+            date=select_unixepoch_date())
             
     #db.commit()
     # send an email to subscribers
@@ -260,7 +261,8 @@ def update_query_world(APIData):
             totalCases=convert_to_int(row['Total Cases_text']),
             totalDeaths=convert_to_int(row['Total Deaths_text']),
             totalRecovered=convert_to_int(row['Total Recovered_text']),
-            countryName=row['Country_text'])
+            countryName=row['Country_text'],
+            date=select_unixepoch_date())
 
     #db.commit()
 
@@ -285,20 +287,10 @@ def select_cases_where_country_date(tableName, country, date):
     return result
 
 
-def convert_to_int(str):
-    
-    # check if str is empty or N/A
-    # if yes, return an empty string
-    # else replace comma with space and convert the str into an int
-    if not str or str == "N/A":
-        s = ''
-        return s
-    else:
-        s = str.replace(",", "")
+def select_unixepoch_date():
 
-        if "+" in s:
-            s.replace("+" , "")
+    unixepochDate = select strftime('%s', 'now')
+    return unixepochDate
 
-        i = int(s)
 
-    return i
+
