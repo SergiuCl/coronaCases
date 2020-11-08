@@ -1,6 +1,6 @@
 from cs50 import SQL
 from helpers import get_API_News_austria, get_API_News_world, convert_to_int
-from datetime import date, datetime
+from datetime import date
 from send import email_to_subscribers
 import http.client
 import json
@@ -123,6 +123,7 @@ def update_query_world(APIData):
                         totalCases = :totalCases,
                         totalDeaths = :totalDeaths,
                         totalRecovered = :totalRecovered,
+                        date = :date
                         WHERE country= :countryName""",
                 
             activeCases=convert_to_int(row['Active Cases_text']),
@@ -132,7 +133,7 @@ def update_query_world(APIData):
             totalDeaths=convert_to_int(row['Total Deaths_text']),
             totalRecovered=convert_to_int(row['Total Recovered_text']),
             countryName=row['Country_text'],
-            date=DateTime('now'))
+            date=select_unixepoch_date())
 
     db.commit()
 
