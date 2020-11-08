@@ -6,7 +6,6 @@ import http.client
 import json
 
 
-
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///coronaDatabase.db")
 
@@ -75,12 +74,12 @@ def update_cases_world(APIData):
         else:
             update_query_world(APIData)
             # if new data, insert it into history
-            insert_into_history(APIData)
+            #insert_into_history(APIData)
             # send an email to subscribers
             email_to_subscribers()
     else:
         insert_query(APIData)
-        insert_into_history(APIData)
+        #insert_into_history(APIData)
 
 
 def update_query_austria(APIData):
@@ -129,36 +128,19 @@ def update_query_austria(APIData):
 def insert_query(APIData):
 
     # for each row in APIData
-    # ensure key 'Last Update' exists in dict
-    # if exists - insert all the values into the table casesWorld
-    # if not - insert N/A into 'Last Update'
     for row in APIData:
-        if keyLastUpdate in APIData:
-            db.execute("""INSERT INTO casesWorld
-                            (country, activeCases, newCases, newDeaths, totalCases, totalDeaths, totalRecovered, lastUpdate)
-                            VALUES(:countryName, :activeCases, :newCases, :newDeaths, :totalCases, :totalDeaths, :totalRecovered, :lastUpdate)""",
+        db.execute("""INSERT INTO casesWorld
+                        (country, active, new, deaths, totalCases, totalDeaths, totalRecovered)
+                        VALUES(:countryName, :activeCases, :newCases, :newDeaths, :totalCases, :totalDeaths, :totalRecovered)""",
                     
-                countryName=row['Country_text'],
-                activeCases=row['Active Cases_text'],
-                newCases=row['New Cases_text'],
-                newDeaths=row['New Deaths_text'],
-                totalCases=row['Total Cases_text'],
-                totalDeaths=row['Total Deaths_text'],
-                totalRecovered=row['Total Recovered_text'],
-                lastUpdate=row['Last Update'])
-        else:
-            db.execute("""INSERT INTO casesWorld
-                            (country, activeCases, newCases, newDeaths, totalCases, totalDeaths, totalRecovered, lastUpdate)
-                            VALUES(:countryName, :activeCases, :newCases, :newDeaths, :totalCases, :totalDeaths, :totalRecovered, :lastUpdate)""",
-                                
-                countryName=row['Country_text'],
-                activeCases=row['Active Cases_text'],
-                newCases=row['New Cases_text'],
-                newDeaths=row['New Deaths_text'],
-                totalCases=row['Total Cases_text'],
-                totalDeaths=row['Total Deaths_text'],
-                totalRecovered=row['Total Recovered_text'],
-                lastUpdate=notAvailable)
+            countryName=row['Country_text'],
+            activeCases=convert_to_int(row['Active Cases_text']),
+            newCases=convert_to_int(row['New Cases_text']),
+            newDeaths=convert_to_int(row['New Deaths_text']),
+            totalCases=convert_to_int(row['Total Cases_text']),
+            totalDeaths=convert_to_int(row['Total Deaths_text']),
+            totalRecovered=convert_to_int(row['Total Recovered_text']))
+            
     #db.commit()
     # send an email to subscribers
     #email_to_subscribers(APIData[0]['Total Cases_text'], APIData[0]['New Cases_text'])
@@ -272,12 +254,12 @@ def update_query_world(APIData):
                         totalRecovered = :totalRecovered,
                         WHERE country= :countryName""",
                 
-            activeCases=int(row['Active Cases_text']),
-            newCases=int(row['New Cases_text'][1:]),
-            newDeaths=int(row['New Deaths_text'][1:]),
-            totalCases=int(row['Total Cases_text']),
-            totalDeaths=int(row['Total Deaths_text']),
-            totalRecovered=int(row['Total Recovered_text']),
+            activeCases=convert_to_int(row['Active Cases_text']),
+            newCases=convert_to_int(row['New Cases_text'][1:]),
+            newDeaths=convert_to_int(row['New Deaths_text'][1:]),
+            totalCases=convert_to_int(row['Total Cases_text']),
+            totalDeaths=convert_to_int(row['Total Deaths_text']),
+            totalRecovered=convert_to_int(row['Total Recovered_text']),
             countryName=row['Country_text'])
 
     #db.commit()
@@ -301,3 +283,22 @@ def select_cases_where_country_date(tableName, country, date):
 
     result = db.execute("SELECT * FROM :tableName WHERE country=:country AND date=:date", tableName=tableName, country=country, date=date)
     return result
+
+
+def convert_to_int(str):
+    
+    # check if str is empty or N/A
+    # if yes, return an empty string
+    # else replace comma with space and convert the str into an int
+    if not str or str == "N/A":
+        s = ''
+        return s
+    else:
+        s = str.replace(",", "")
+
+        if "+" in s:
+            s.replace("+" , "")
+
+        i = int(s)
+
+    return i
