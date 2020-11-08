@@ -1,6 +1,6 @@
 from cs50 import SQL
 from helpers import get_API_News_austria, get_API_News_world, convert_to_int
-from datetime import date
+from datetime import date, datetime
 from send import email_to_subscribers
 import http.client
 import json
@@ -21,32 +21,7 @@ def get_cases_world():
     casesWorld = get_API_News_world()
     # call the function to update the table
     update_cases_world(casesWorld)
-    
-
-
-def update_cases_austria(APIData):
-
-    tblValues = {}
-    tblCasesInAustria = "casesInAustria"
-
-    # get the values from table
-    tblValues = select_cases(tblCasesInAustria) 
-
-    """
-    ensure dict is not None
-    if the value did not change, exit function
-    else, update the table
-    """ 
-    if bool(tblValues):
-        if tblValues[0]['totalCases'] == APIData['Total Cases_text']:
-            return
-        else:
-            # update the table casesInAustria
-            update_query_austria(APIData)
-    else:
-        insert_query_austria(APIData)
-
-    
+       
     
 
 
@@ -136,29 +111,7 @@ def insert_into_history(APIData):
                 date=today)
     db.commit()
 
-'''
-def update_tblHistory(tblName, APIData, date):
 
-    db.execute("""UPDATE :tblName
-                    SET activeCases = :activeCases, 
-                    newCases = :newCases, 
-                    newDeaths = :newDeaths, 
-                    totalCases = :totalCases, 
-                    totalDeaths = :totalDeaths, 
-                    totalRecovered = :totalRecovered
-                    date = :date
-                    WHERE country=:country AND date=:date""",
-
-                tblName=tblName,
-                activeCases=APIData['Active Cases_text'], 
-                newCases=APIData['New Cases_text'], 
-                newDeaths=APIData['New Deaths_text'], 
-                totalCases=APIData['Total Cases_text'], 
-                totalDeaths=APIData['Total Deaths_text'], 
-                totalRecovered=APIData['Total Recovered_text'],
-                country=APIData['Country_text'],
-                date=date)
-'''
 
 def update_query_world(APIData):
 
@@ -179,7 +132,7 @@ def update_query_world(APIData):
             totalDeaths=convert_to_int(row['Total Deaths_text']),
             totalRecovered=convert_to_int(row['Total Recovered_text']),
             countryName=row['Country_text'],
-            date=select_unixepoch_date())
+            date=DateTime('now'))
 
     db.commit()
 
@@ -194,7 +147,7 @@ def select_cases(tableName):
 # select query function with condition
 def select_cases_where_country(tableName, country):
 
-    result = db.execute("SELECT * FROM :tableName WHERE country=:condition", tableName=tableName, condition=country)
+    result = db.execute("SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM :tableName WHERE country=:condition", tableName=tableName, condition=country)
     return result
 
 
@@ -206,8 +159,8 @@ def select_cases_where_country_date(tableName, country, date):
 
 def select_unixepoch_date():
 
-    unixepochDate = db.execute("select strftime('%s', 'now')")
-    return unixepochDate
+    unixepochDate = db.execute("SELECT strftime('%s', 'now')")
+    return unixepochDate[0]["strftime('%s', 'now')"]
 
 
 

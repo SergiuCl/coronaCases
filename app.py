@@ -1,7 +1,7 @@
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from cs50 import SQL
 from apscheduler.schedulers.background import BackgroundScheduler
-from dbQRYsCoronaCases import get_cases_austria, select_cases, get_cases_world, select_cases_where_country
+from dbQRYsCoronaCases import select_cases, get_cases_world, select_cases_where_country
 from dbQRYsSubscribe import select_user, insert_user, remove_user, select_all_users
 from helpers import get_news, get_dict_news
 import requests
@@ -63,9 +63,10 @@ def show_item_info(content):
 @app.route("/casesInAustria")
 def casesInAustria():
     
-    tblCasesInAustria = "casesInAustria"
+    tblCasesWorld = "casesWorld"
+    country = "Austria"
     tableValues = {}
-    tableValues = select_cases(tblCasesInAustria)
+    tableValues = select_cases_where_country(tblCasesWorld, country)
     return render_template('casesInAustria.html', casesAustria=tableValues)
 
 
@@ -152,8 +153,7 @@ def subscribe():
 # set a background scheduler
 scheduler = BackgroundScheduler()
 # set a scheduler with interval 3 minute    
-job1 = scheduler.add_job(get_cases_austria, 'interval', minutes=0.2)
-job2 = scheduler.add_job(get_cases_world, 'interval', minutes=0.2)
+job1 = scheduler.add_job(get_cases_world, 'interval', minutes=0.2)
 # start the scheduler
 scheduler.start()
 
