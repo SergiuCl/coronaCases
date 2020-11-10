@@ -23,6 +23,7 @@ def get_cases_world():
 
 
 def update_cases_world(APIData):
+
     tblCasesWorld = "casesWorld"
     # get the values from table, WHERE country is "world" - that means the total number of cases
     country = "World"
@@ -52,7 +53,7 @@ def insert_query(APIData):
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
     cursor = conn.cursor()
-
+    currDate = get_date()
     # for each row in APIData
     for row in APIData:
         # many key errors from API. solve the problems with a try block
@@ -61,16 +62,14 @@ def insert_query(APIData):
                             (country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date)
                             VALUES("{countryName}", "{activeCases}", "{newCases}", "{newDeaths}", "{totalCases}", "{totalDeaths}", "{totalRecovered}", "{date}");"""
 
-            currDate = get_date()
             sql_command = format_str.format(countryName=row['Country_text'], activeCases=row['Active Cases_text'], 
                                             newCases=row['New Deaths_text'], newDeaths=row['New Deaths_text'],
                                             totalCases=row['Total Cases_text'], totalDeaths=row['Total Deaths_text'],
                                             totalRecovered=row['Total Recovered_text'], date=currDate)
             cursor.execute(sql_command)
-            conn.commit()
         except KeyError:
             continue
-
+    conn.commit()
     # close the connection
     conn.close()
 
@@ -122,36 +121,33 @@ def insert_into_history(APIData):
     conn.close()
 
 
-
 def update_query_world(APIData):
+
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
     cursor = conn.cursor()
-
+    currDate = get_date()
+    
     for row in APIData:
-        cursor.execute("""UPDATE casesWorld
-                        SET active = :activeCases,
-                        new = :newCases,
-                        deaths = :newDeaths,
-                        totalCases = :totalCases,
-                        totalDeaths = :totalDeaths,
-                        totalRecovered = :totalRecovered,
-                        date = :date
-                        WHERE country= :countryName""",
-                
-            activeCases=convert_to_int(row['Active Cases_text']),
-            newCases=convert_to_int(row['New Cases_text'][1:]),
-            newDeaths=convert_to_int(row['New Deaths_text'][1:]),
-            totalCases=convert_to_int(row['Total Cases_text']),
-            totalDeaths=convert_to_int(row['Total Deaths_text']),
-            totalRecovered=convert_to_int(row['Total Recovered_text']),
-            countryName=row['Country_text'],
-            date=get_date())
-
-    # commit the changes
-    conn.commit()
-    # close the connection
-    conn.close()
+        try:
+            format_str = """UPDATE casesWorld 
+                            SET active="{activeCases}",
+                            new="{newCases}",
+                            deaths="{newDeaths}",
+                            totalCases="{totalCases}",
+                            totalDeaths="{totalDeaths}",
+                            totalRecovered="{totalRecovered}",
+                            date="{lastUpdate}" WHERE country="{countryName}";"""
+            sql_command = format_str.format(activeCases=row['Active Cases_text'], newCases=row['New Deaths_text'],
+                                            newDeaths=row['New Deaths_text'], totalCases=row['Total Cases_text'],
+                                            totalDeaths=row['Total Deaths_text'], totalRecovered=row['Total Recovered_text'],
+                                            lastUpdate=currDate, country=row['Country_text'])
+            cursor.execute(sql_command)
+        except KeyError:
+            continue
+        conn.commit()
+        # close the connection
+        conn.close()    
 
 
 def select_cases(tableName):

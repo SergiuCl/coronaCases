@@ -57,7 +57,7 @@ def send_email(emailAdress, username, country, newCases, totalCases):
   <html>
     <body>
       <p>Hi {name},<br>
-      <p>Below you can find the new number of Corona cases in: {country}</p><br>
+      <p>Below you can find the new number of Corona cases in {country}</p><br>
       <p style="color:red;">New Cases: {newCases}</p>
       <p>Total Cases: {totalCases}</p>
     </body>

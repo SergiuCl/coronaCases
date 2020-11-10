@@ -7,7 +7,7 @@ from helpers import get_news, get_dict_news
 import requests
 import json
 import time, threading
-
+import sqlite3
 
 # Configure application
 app = Flask(__name__)
@@ -139,7 +139,14 @@ def subscribe():
                     flash('You have successfully subscribed', 'success')
                     return redirect(url_for('subscribe'))
     else:
-        countries = db.execute("SELECT country FROM casesWorld")
+
+        # Configure SQLite database
+        conn = sqlite3.connect('coronaDatabase.db')
+        cursor = conn.cursor()
+        sql_command = "SELECT country FROM casesWorld"
+        cursor.execute(sql_command)
+        countries = cursor.fetchall()
+        #countries = db.execute("SELECT country FROM casesWorld")
         countriesList = []
 
         for i in range(len(countries)):
