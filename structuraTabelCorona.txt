@@ -31,3 +31,4 @@ CREATE TABLE historyWorld (country TEXT, activeCases TEXT, newCases TEXT, newDea
 CREATE TABLE casesWorld (country TEXT, activeCases TEXT, newCases TEXT, newDeaths TEXT, totalCases TEXT, totalDeaths TEXT, totalRecovered TEXT, lastUpdate TEXT)
 CREATE TABLE subscribers (subscriber_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, emailAdress text NOT NULL, Name text NOT NULL, country TEXT)
 CREATE TABLE casesInAustria (country TEXT, activeCases TEXT, newCases TEXT, newDeaths TEXT, totalCases TEXT, totalDeaths TEXT, totalRecovered TEXT, lastUpdate TEXT)
+CREATE TABLE casesWorld (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, country TEXT, active INTEGER, new INTEGER, deaths INTEGER, totalCases INTEGER, totalDeaths INTEGER, totalRecovered INTEGER, date INTEGER)

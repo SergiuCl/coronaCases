@@ -2,17 +2,14 @@ from cs50 import SQL
 from helpers import get_API_News_austria, get_API_News_world, convert_to_int
 from datetime import date
 from send import email_to_subscribers
+from contextlib import closing
 import http.client
 import json
+import sqlite3
 
 
-# Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///coronaDatabase.db")
 
-# define global variables
-notAvailable = "N/A"
-keyLastUpdate = "Last Update"
-
+#https://stackoverflow.com/questions/47862345/python-error-trying-to-use-execute-sqlite-api-query-with-keyword-arguments
 
 
 def get_cases_world():
@@ -45,35 +42,45 @@ def update_cases_world(APIData):
             email_to_subscribers()
     else:
         insert_query(APIData)
+        email_to_subscribers()
         #insert_into_history(APIData)
 
 
 
 def insert_query(APIData):
 
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
+
     # for each row in APIData
     for row in APIData:
-        db.execute("""INSERT INTO casesWorld
-                        (country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date)
-                        VALUES(:countryName, :activeCases, :newCases, :newDeaths, :totalCases, :totalDeaths, :totalRecovered, :date)""",
-                    
-            countryName=row['Country_text'],
-            activeCases=convert_to_int(row['Active Cases_text']),
-            newCases=convert_to_int(row['New Cases_text']),
-            newDeaths=convert_to_int(row['New Deaths_text']),
-            totalCases=convert_to_int(row['Total Cases_text']),
-            totalDeaths=convert_to_int(row['Total Deaths_text']),
-            totalRecovered=convert_to_int(row['Total Recovered_text']),
-            date=select_unixepoch_date())
-            
-    #db.commit()
-    # send an email to subscribers
-    #email_to_subscribers(APIData[0]['Total Cases_text'], APIData[0]['New Cases_text'])
-    email_to_subscribers()
+        # many key errors from API. solve the problems with a try block
+        try:
+            format_str = """INSERT INTO casesWorld
+                            (country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date)
+                            VALUES("{countryName}", "{activeCases}", "{newCases}", "{newDeaths}", "{totalCases}", "{totalDeaths}", "{totalRecovered}", "{date}");"""
+
+            currDate = get_date()
+            sql_command = format_str.format(countryName=row['Country_text'], activeCases=row['Active Cases_text'], 
+                                            newCases=row['New Deaths_text'], newDeaths=row['New Deaths_text'],
+                                            totalCases=row['Total Cases_text'], totalDeaths=row['Total Deaths_text'],
+                                            totalRecovered=row['Total Recovered_text'], date=currDate)
+            cursor.execute(sql_command)
+            conn.commit()
+        except KeyError:
+            continue
+
+    # close the connection
+    conn.close()
 
 
 
 def insert_into_history(APIData):
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
 
     today = date.today()
     tblHistory = "historyWorld"
@@ -97,7 +104,7 @@ def insert_into_history(APIData):
             #    continue
             
         else:
-            db.execute("""INSERT INTO historyWorld
+            cursor.execute("""INSERT INTO historyWorld
                             (country, activeCases, newCases, newDeaths, totalCases, totalDeaths, totalRecovered, date)
                             VALUES(:countryName, :activeCases, :newCases, :newDeaths, :totalCases, :totalDeaths, :totalRecovered, :date)""",
 
@@ -109,14 +116,20 @@ def insert_into_history(APIData):
                 totalDeaths=row['Total Deaths_text'],
                 totalRecovered=row['Total Recovered_text'],
                 date=today)
-    db.commit()
+    # commit the changes
+    conn.commit()
+    # close the connection
+    conn.close()
 
 
 
 def update_query_world(APIData):
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
 
     for row in APIData:
-        db.execute("""UPDATE casesWorld
+        cursor.execute("""UPDATE casesWorld
                         SET active = :activeCases,
                         new = :newCases,
                         deaths = :newDeaths,
@@ -133,35 +146,69 @@ def update_query_world(APIData):
             totalDeaths=convert_to_int(row['Total Deaths_text']),
             totalRecovered=convert_to_int(row['Total Recovered_text']),
             countryName=row['Country_text'],
-            date=select_unixepoch_date())
+            date=get_date())
 
-    db.commit()
+    # commit the changes
+    conn.commit()
+    # close the connection
+    conn.close()
 
 
 def select_cases(tableName):
 
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
+    format_str = """SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM "{table}";"""
+    sql_command = format_str.format(table=tableName)
+    cursor.execute(sql_command)
+    result = cursor.fetchall()
     # make a select query and save the result in result
-    result = db.execute("SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM :tableName", tableName=tableName)
+    #result = cursor.execute("SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM :tableName", {"tableName": tableName}).fetchall()
+    
+    # close the connection
+    conn.close()
+
     return result
 
 
 # select query function with condition
 def select_cases_where_country(tableName, country):
+    
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
+    format_str = """SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM "{table}" WHERE country="{countryName}";"""
+    sql_command = format_str.format(table=tableName, countryName=country)
+    cursor.execute(sql_command)
+    result = cursor.fetchall()
+    #result = cursor.execute("SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered FROM :tableName WHERE country=:country", {"tableName": tableName, "country": country}).fetchall()
+    
+    # close the connection
+    conn.close()
 
-    result = db.execute("SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM :tableName WHERE country=:condition", tableName=tableName, condition=country)
     return result
 
 
 def select_cases_where_country_date(tableName, country, date):
 
-    result = db.execute("SELECT * FROM :tableName WHERE country=:country AND date=:date", tableName=tableName, country=country, date=date)
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
+    format_str = """SELECT * FROM "{table}" WHERE country="{countryName} AND date="{dateUnix}";"""
+    sql_command = format_str.format(table=tableName, countryName=country, dateUnix=date)
+    cursor.execute(sql_command)
+    #result = cursor.execute("SELECT * FROM :tableName WHERE country=:country AND date=:date", {"tableName": tableName, "country": country, "date": date}).fetchall()
+    result = cursor.fetchall()
+    # close the connection
+    conn.close()
+
     return result
 
 
-def select_unixepoch_date():
-
-    unixepochDate = db.execute("SELECT strftime('%s', 'now')")
-    return unixepochDate[0]["strftime('%s', 'now')"]
+def get_date():
+    today = date.today()
+    return today
 
 
 
