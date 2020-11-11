@@ -102,3 +102,11 @@ def convert_to_int(str):
         i = int(s)
 
     return i
+
+
+# define a function to get the data from SQLite3 in dict instead of tuple
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d

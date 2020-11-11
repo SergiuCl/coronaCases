@@ -3,7 +3,7 @@ from cs50 import SQL
 from apscheduler.schedulers.background import BackgroundScheduler
 from dbQRYsCoronaCases import select_cases, get_cases_world, select_cases_where_country
 from dbQRYsSubscribe import select_user, insert_user, remove_user, select_all_users
-from helpers import get_news, get_dict_news
+from helpers import get_news, get_dict_news, dict_factory
 import requests
 import json
 import time, threading
@@ -142,6 +142,7 @@ def subscribe():
 
         # Configure SQLite database
         conn = sqlite3.connect('coronaDatabase.db')
+        conn.row_factory = dict_factory
         cursor = conn.cursor()
         sql_command = "SELECT country FROM casesWorld"
         cursor.execute(sql_command)

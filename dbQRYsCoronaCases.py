@@ -1,5 +1,5 @@
 from cs50 import SQL
-from helpers import get_API_News_austria, get_API_News_world, convert_to_int
+from helpers import get_API_News_austria, get_API_News_world, convert_to_int, dict_factory
 from datetime import date
 from send import email_to_subscribers
 from contextlib import closing
@@ -28,7 +28,6 @@ def update_cases_world(APIData):
     # get the values from table, WHERE country is "world" - that means the total number of cases
     country = "World"
     tblValues = select_cases_where_country(tblCasesWorld, country)
-    print(tblValues)
     # ensure dict is not None
     # if the value did not change, exit function
     # else, update the table
@@ -212,9 +211,3 @@ def get_date():
     today = date.today()
     return today
 
-# define a function to get the data from SQLite3 in dict instead of tuple
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
