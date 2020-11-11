@@ -28,6 +28,7 @@ def update_cases_world(APIData):
     # get the values from table, WHERE country is "world" - that means the total number of cases
     country = "World"
     tblValues = select_cases_where_country(tblCasesWorld, country)
+    print(tblValues)
     # ensure dict is not None
     # if the value did not change, exit function
     # else, update the table
@@ -62,10 +63,10 @@ def insert_query(APIData):
                             (country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date)
                             VALUES("{countryName}", "{activeCases}", "{newCases}", "{newDeaths}", "{totalCases}", "{totalDeaths}", "{totalRecovered}", "{date}");"""
 
-            sql_command = format_str.format(countryName=row['Country_text'], activeCases=row['Active Cases_text'], 
-                                            newCases=row['New Deaths_text'], newDeaths=row['New Deaths_text'],
-                                            totalCases=row['Total Cases_text'], totalDeaths=row['Total Deaths_text'],
-                                            totalRecovered=row['Total Recovered_text'], date=currDate)
+            sql_command = format_str.format(countryName=row['Country_text'], activeCases=convert_to_int(row['Active Cases_text']), 
+                                            newCases=convert_to_int(row['New Cases_text']), newDeaths=convert_to_int(row['New Deaths_text']),
+                                            totalCases=convert_to_int(row['Total Cases_text']), totalDeaths=convert_to_int(row['Total Deaths_text']),
+                                            totalRecovered=convert_to_int(row['Total Recovered_text']), date=currDate)
             cursor.execute(sql_command)
         except KeyError:
             continue
@@ -138,9 +139,10 @@ def update_query_world(APIData):
                             totalDeaths="{totalDeaths}",
                             totalRecovered="{totalRecovered}",
                             date="{lastUpdate}" WHERE country="{countryName}";"""
-            sql_command = format_str.format(activeCases=row['Active Cases_text'], newCases=row['New Deaths_text'],
-                                            newDeaths=row['New Deaths_text'], totalCases=row['Total Cases_text'],
-                                            totalDeaths=row['Total Deaths_text'], totalRecovered=row['Total Recovered_text'],
+
+            sql_command = format_str.format(activeCases=convert_to_int(row['Active Cases_text']), newCases=convert_to_int(row['New Cases_text']),
+                                            newDeaths=convert_to_int(row['New Deaths_text']), totalCases=convert_to_int(row['Total Cases_text']),
+                                            totalDeaths=convert_to_int(row['Total Deaths_text']), totalRecovered=convert_to_int(row['Total Recovered_text']),
                                             lastUpdate=currDate, country=row['Country_text'])
             cursor.execute(sql_command)
         except KeyError:
