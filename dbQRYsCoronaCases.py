@@ -34,9 +34,10 @@ def update_cases_world(APIData):
     # else, update the table
     if bool(tblValues):
         # compare the values from table with the values from API
-        if tblValues[0]['totalCases'] == APIData[0]['Total Cases_text']:
+        if tblValues[0]['totalCases'] == convert_to_int(APIData[0]['Total Cases_text']):
             return
         else:
+            print("table updated................................................................")
             update_query_world(APIData)
             # if new data, insert it into history
             #insert_into_history(APIData)
@@ -156,6 +157,7 @@ def select_cases(tableName):
 
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM "{table}";"""
     sql_command = format_str.format(table=tableName)
@@ -175,6 +177,7 @@ def select_cases_where_country(tableName, country):
     
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM "{table}" WHERE country="{countryName}";"""
     sql_command = format_str.format(table=tableName, countryName=country)
@@ -192,6 +195,7 @@ def select_cases_where_country_date(tableName, country, date):
 
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT * FROM "{table}" WHERE country="{countryName} AND date="{dateUnix}";"""
     sql_command = format_str.format(table=tableName, countryName=country, dateUnix=date)
@@ -208,5 +212,9 @@ def get_date():
     today = date.today()
     return today
 
-
-
+# define a function to get the data from SQLite3 in dict instead of tuple
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
