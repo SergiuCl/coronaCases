@@ -1,5 +1,4 @@
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
-from cs50 import SQL
 from apscheduler.schedulers.background import BackgroundScheduler
 from dbQRYsCoronaCases import select_cases, get_cases_world, select_cases_where_country
 from dbQRYsSubscribe import select_user, insert_user, remove_user, select_all_users
@@ -19,7 +18,6 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-db = SQL("sqlite:///coronaDatabase.db")
 
 # Ensure responses aren't cached
 @app.after_request

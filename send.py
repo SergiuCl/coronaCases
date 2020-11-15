@@ -3,12 +3,11 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from string import Template
-from cs50 import SQL
 from dbQRYsSubscribe import select_all_users
+from helpers import dict_factory
+import sqlite3
 #from dbQRYsCoronaCases import select_cases
 
-# Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///coronaDatabase.db")
 
 """ every time the cases update in table
     send an email to all the subscribers from the database
@@ -18,8 +17,14 @@ def email_to_subscribers():
 
   subscribers = {}
   subscribers =  select_all_users()
-  tblValues = db.execute("SELECT * FROM casesWorld")
-
+  # Configure SQLite database
+  conn = sqlite3.connect('coronaDatabase.db')
+  conn.row_factory = dict_factory
+  cursor = conn.cursor()
+  sql_command = """SELECT * FROM casesWorld;"""
+  cursor.execute(sql_command)
+  tblValues = cursor.fetchall()
+  
   # if subscribers and tblValues contain data
   if bool(subscribers):
     if bool(tblValues):

@@ -1,26 +1,54 @@
-from cs50 import SQL
-
-# Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///coronaDatabase.db")
-
+import sqlite3
+from helpers import dict_factory
 
 def select_user(emailAdress):
-
-    user = db.execute("SELECT * from subscribers WHERE emailAdress=:email", email=emailAdress)
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
+    cursor = conn.cursor()
+    format_str = """SELECT * FROM subscribers WHERE emailAdress="{email}";"""
+    sql_command = format_str.format(email=emailAdress)
+    cursor.execute(sql_command)
+    user = cursor.fetchall()
+    # close the connection
+    conn.close()
     return user
 
 def insert_user(emailAdress, name, country):
-
-    db.execute("INSERT INTO subscribers(emailAdress, name, country) VALUES(:email, :name, :country)",
-            email=emailAdress, name=name, country=country)
+    
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
+    format_str = """INSERT INTO subscribers (emailAdress, name, country) VALUES("{email}", "{name}", "{country}");"""
+    sql_command = format_str.format(email=emailAdress, name=name, country=country)
+    cursor.execute(sql_command)
+    conn.commit()
+    # close the connection
+    conn.close()
     return
 
 def remove_user(emailAdress):
 
-    db.execute("DELETE FROM subscribers WHERE emailAdress=:email", email=emailAdress)
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
+    format_str = """DELETE FROM subscribers WHERE emailAdress="{email}";"""
+    sql_command = format_str.format(email=emailAdress)
+    cursor.execute(sql_command)
+    conn.commit()
+    # close the connection
+    conn.close()
     return
 
 def select_all_users():
 
-    users = db.execute("SELECT * FROM subscribers")
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
+    cursor = conn.cursor()
+    sql_command = """SELECT * FROM subscribers"""
+    cursor.execute(sql_command)
+    users = cursor.fetchall()
+    # close the connection
+    conn.close()
     return users

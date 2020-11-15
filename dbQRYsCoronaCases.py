@@ -1,4 +1,3 @@
-from cs50 import SQL
 from helpers import get_API_News_austria, get_API_News_world, convert_to_int, dict_factory
 from datetime import date
 from send import email_to_subscribers
@@ -31,12 +30,12 @@ def update_cases_world(APIData):
     # ensure dict is not None
     # if the value did not change, exit function
     # else, update the table
+    print(tblValues)
     if bool(tblValues):
         # compare the values from table with the values from API
         if tblValues[0]['totalCases'] == convert_to_int(APIData[0]['Total Cases_text']):
             return
         else:
-            print("table updated................................................................")
             update_query_world(APIData)
             # if new data, insert it into history
             #insert_into_history(APIData)
@@ -139,17 +138,17 @@ def update_query_world(APIData):
                             totalDeaths="{totalDeaths}",
                             totalRecovered="{totalRecovered}",
                             date="{lastUpdate}" WHERE country="{countryName}";"""
-
-            sql_command = format_str.format(activeCases=convert_to_int(row['Active Cases_text']), newCases=convert_to_int(row['New Cases_text']),
-                                            newDeaths=convert_to_int(row['New Deaths_text']), totalCases=convert_to_int(row['Total Cases_text']),
-                                            totalDeaths=convert_to_int(row['Total Deaths_text']), totalRecovered=convert_to_int(row['Total Recovered_text']),
-                                            lastUpdate=currDate, country=row['Country_text'])
+            
+            sql_command = format_str.format(countryName=row['Country_text'], activeCases=convert_to_int(row['Active Cases_text']),
+                                            newCases=convert_to_int(row['New Cases_text']), newDeaths=convert_to_int(row['New Deaths_text']),
+                                            totalCases=convert_to_int(row['Total Cases_text']), totalDeaths=convert_to_int(row['Total Deaths_text']),
+                                            totalRecovered=convert_to_int(row['Total Recovered_text']), lastUpdate=currDate)
             cursor.execute(sql_command)
         except KeyError:
             continue
-        conn.commit()
-        # close the connection
-        conn.close()    
+    conn.commit()
+    # close the connection
+    conn.close()    
 
 
 def select_cases(tableName):
@@ -182,11 +181,9 @@ def select_cases_where_country(tableName, country):
     sql_command = format_str.format(table=tableName, countryName=country)
     cursor.execute(sql_command)
     result = cursor.fetchall()
-    #result = cursor.execute("SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered FROM :tableName WHERE country=:country", {"tableName": tableName, "country": country}).fetchall()
     
     # close the connection
     conn.close()
-
     return result
 
 
@@ -196,7 +193,7 @@ def select_cases_where_country_date(tableName, country, date):
     conn = sqlite3.connect('coronaDatabase.db')
     conn.row_factory = dict_factory
     cursor = conn.cursor()
-    format_str = """SELECT * FROM "{table}" WHERE country="{countryName} AND date="{dateUnix}";"""
+    format_str = """SELECT * FROM "{table}" WHERE country="{countryName}" AND date="{dateUnix}";"""
     sql_command = format_str.format(table=tableName, countryName=country, dateUnix=date)
     cursor.execute(sql_command)
     #result = cursor.execute("SELECT * FROM :tableName WHERE country=:country AND date=:date", {"tableName": tableName, "country": country, "date": date}).fetchall()
