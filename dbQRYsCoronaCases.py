@@ -7,10 +7,6 @@ import json
 import sqlite3
 
 
-
-#https://stackoverflow.com/questions/47862345/python-error-trying-to-use-execute-sqlite-api-query-with-keyword-arguments
-
-
 def get_cases_world():
 
     # load the data in JSON
@@ -19,8 +15,6 @@ def get_cases_world():
     update_cases_world(casesWorld)
        
     
-
-
 def update_cases_world(APIData):
 
     tblCasesWorld = "casesWorld"
@@ -45,7 +39,6 @@ def update_cases_world(APIData):
         insert_query(APIData)
         email_to_subscribers()
         #insert_into_history(APIData)
-
 
 
 def insert_query(APIData):
@@ -74,47 +67,43 @@ def insert_query(APIData):
     conn.close()
 
 
-
 def insert_into_history(APIData):
 
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
     cursor = conn.cursor()
-
     today = date.today()
-    tblHistory = "historyWorld"
+    tblHistory = "history"
     todayValues = {}
+
     # for each row in APIData
     for row in APIData:
-        # many key errors in code - try to handle the errors with a try block
-        #try:
-        todayValues = select_cases_where_country_date(tblHistory, row['Country_text'], today)
-        #except KeyError:
-        #    continue
+        # many key errors. solve the problems with try block
+        try:
+            # get the values from current date
+            todayValues = select_cases_where_country_date(tblHistory, row['Country_text'], today)
+        except KeyError:
+            continue
+        
         """
         check if today date for current country is already in the database
-         if so, check if it needs to be updated
+        if not, insert the data of the current date
         """ 
         if bool(todayValues):
             continue
-            #if todayValues[0]['totalCases'] != row['Total Cases_text']:
-            #    update_tblHistory(tblHistory, row, today)
-            #else:
-            #    continue
-            
         else:
-            cursor.execute("""INSERT INTO historyWorld
-                            (country, activeCases, newCases, newDeaths, totalCases, totalDeaths, totalRecovered, date)
-                            VALUES(:countryName, :activeCases, :newCases, :newDeaths, :totalCases, :totalDeaths, :totalRecovered, :date)""",
+            try:
+                format_str = """INSERT INTO history
+                                (country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date)
+                                VALUES("{countryName}", "{activeCases}", "{newCases}", "{newDeaths}", "{totalCases}", "{totalDeaths}", "{totalRecovered}", "{date}");"""                
+                sql_command = format_str.format(countryName=row['Country_text'], activeCases=convert_to_int(row['Active Cases_text']), 
+                                                newCases=convert_to_int(row['New Cases_text']), newDeaths=convert_to_int(row['New Deaths_text']),
+                                                totalCases=convert_to_int(row['Total Cases_text']), totalDeaths=convert_to_int(row['Total Deaths_text']),
+                                                totalRecovered=convert_to_int(row['Total Recovered_text']), date=today)
+                cursor.execute(sql_command)
+            except KeyError:
+                continue
 
-                countryName=row['Country_text'],
-                activeCases=row['Active Cases_text'],
-                newCases=row['New Cases_text'],
-                newDeaths=row['New Deaths_text'],
-                totalCases=row['Total Cases_text'],
-                totalDeaths=row['Total Deaths_text'],
-                totalRecovered=row['Total Recovered_text'],
-                date=today)
     # commit the changes
     conn.commit()
     # close the connection

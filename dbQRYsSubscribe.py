@@ -1,6 +1,7 @@
 import sqlite3
 from helpers import dict_factory
 
+
 def select_user(emailAdress):
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')

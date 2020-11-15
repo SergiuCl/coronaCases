@@ -1,7 +1,7 @@
 from newsapi import NewsApiClient
 import http.client
 import json
-
+import sqlite3
 
 def get_news():
 
@@ -38,7 +38,6 @@ def get_dict_news():
     # save the articles variables
     articles = topheadlines['articles']
     return articles
-
 
 
 def get_API_News_austria():

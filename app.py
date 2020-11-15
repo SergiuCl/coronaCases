@@ -145,7 +145,6 @@ def subscribe():
         sql_command = "SELECT country FROM casesWorld"
         cursor.execute(sql_command)
         countries = cursor.fetchall()
-        #countries = db.execute("SELECT country FROM casesWorld")
         countriesList = []
 
         for i in range(len(countries)):
