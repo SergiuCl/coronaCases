@@ -1,7 +1,6 @@
 from newsapi import NewsApiClient
 import http.client
 import json
-import sqlite3
 
 def get_news():
 

@@ -16,7 +16,7 @@ def get_cases_world():
        
     
 def update_cases_world(APIData):
-
+    
     tblCasesWorld = "casesWorld"
     # get the values from table, WHERE country is "world" - that means the total number of cases
     country = "World"
@@ -24,7 +24,6 @@ def update_cases_world(APIData):
     # ensure dict is not None
     # if the value did not change, exit function
     # else, update the table
-    print(tblValues)
     if bool(tblValues):
         # compare the values from table with the values from API
         if tblValues[0]['totalCases'] == convert_to_int(APIData[0]['Total Cases_text']):
@@ -32,13 +31,13 @@ def update_cases_world(APIData):
         else:
             update_query_world(APIData)
             # if new data, insert it into history
-            #insert_into_history(APIData)
+            insert_into_history(APIData)
             # send an email to subscribers
             email_to_subscribers()
     else:
         insert_query(APIData)
         email_to_subscribers()
-        #insert_into_history(APIData)
+        insert_into_history(APIData)
 
 
 def insert_query(APIData):
@@ -46,7 +45,7 @@ def insert_query(APIData):
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
     cursor = conn.cursor()
-    currDate = get_date()
+    currDate = date.today()
     # for each row in APIData
     for row in APIData:
         # many key errors from API. solve the problems with a try block
@@ -115,7 +114,7 @@ def update_query_world(APIData):
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
     cursor = conn.cursor()
-    currDate = get_date()
+    currDate = date.today()
     
     for row in APIData:
         try:
@@ -193,7 +192,33 @@ def select_cases_where_country_date(tableName, country, date):
     return result
 
 
-def get_date():
-    today = date.today()
-    return today
+def select_countries(tableName):
 
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
+    cursor = conn.cursor()
+    format_str = """SELECT country FROM "{table}" ORDER BY country;"""
+    sql_command = format_str.format(table=tableName)
+    cursor.execute(sql_command)
+    result = cursor.fetchall()
+    # close the connection
+    conn.close()
+
+    return result
+
+
+def select_history_for_country(tableName, country):
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
+    cursor = conn.cursor()
+    format_str = """SELECT * FROM "{table}" WHERE country="{country}";"""
+    sql_command = format_str.format(table=tableName, country=country)
+    cursor.execute(sql_command)
+    result = cursor.fetchall()
+    # close the connection
+    conn.close()
+
+    return result

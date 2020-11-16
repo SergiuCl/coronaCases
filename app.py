@@ -1,19 +1,18 @@
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from apscheduler.schedulers.background import BackgroundScheduler
-from dbQRYsCoronaCases import select_cases, get_cases_world, select_cases_where_country
+from dbQRYsCoronaCases import select_cases, get_cases_world, select_cases_where_country, select_countries, select_history_for_country
 from dbQRYsSubscribe import select_user, insert_user, remove_user, select_all_users
 from helpers import get_news, get_dict_news, dict_factory
 import requests
 import json
 import time, threading
-import sqlite3
+
 
 # Configure application
 app = Flask(__name__)
 
 # Set the secret key to some random bytes. Keep this really secret!
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -29,14 +28,12 @@ def after_request(response):
     return response
 
 
-
 @app.route("/")
 def Index():
     
     # get API News
     mylist = get_news()
     return render_template('index.html', context = mylist)
-
 
 
 @app.route("/news/<content>")
@@ -56,8 +53,6 @@ def show_item_info(content):
     return render_template('news.html', content=content, i=contentImg)
 
 
-
-
 @app.route("/casesInAustria")
 def casesInAustria():
     
@@ -66,7 +61,6 @@ def casesInAustria():
     tableValues = {}
     tableValues = select_cases_where_country(tblCasesWorld, country)
     return render_template('casesInAustria.html', casesAustria=tableValues)
-
 
 
 @app.route("/casesWorld")
@@ -83,13 +77,15 @@ def casesWorld():
 @app.route("/history/<content>")
 def cases_history(content):
 
+    tblHistory = "history"
     tableValues = select_cases("casesWorld")
     if bool(tableValues):
         for row in tableValues:
             if content in row['country']:
                 content = row['country']
+                countryData = select_history_for_country(tblHistory, content)
 
-    return render_template('history.html', context=content)
+    return render_template('history.html', context=content, cases=countryData)
 
 
 @app.route("/subscription", methods=["GET", "POST"])
@@ -139,20 +135,13 @@ def subscribe():
     else:
 
         # Configure SQLite database
-        conn = sqlite3.connect('coronaDatabase.db')
-        conn.row_factory = dict_factory
-        cursor = conn.cursor()
-        sql_command = "SELECT country FROM casesWorld"
-        cursor.execute(sql_command)
-        countries = cursor.fetchall()
+        countries = select_countries("casesWorld")
         countriesList = []
 
         for i in range(len(countries)):
             countriesList.append(countries[i]['country'])
 
         return render_template("subscription.html", countries=countriesList)
-
-
 
 
 # set a background scheduler
@@ -164,3 +153,5 @@ scheduler.start()
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+    
