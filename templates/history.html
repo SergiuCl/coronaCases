@@ -8,9 +8,23 @@
 {% block body %}
     {% block main %}
 
-    <p>{{ content }}</p>
-    <p>{{ cases }}</p>
-
+	<p>{{ content }}</p>
+	
+	<div>
+		<h1>New Cases</h1>
+		<p>{{ newCases }}</p>
+	</div>
+    <div>
+		<h1>Active Cases</h1>
+		<p>{{ maximumActive }}</p>
+	</div>
+	<div>
+		<h1>Deaths</h1>
+		<p>{{ maximumDeaths }}</p>
+	</div>
+	<div>
+		<p>{{ dates }}</p>
+	</div>
 
     
 <div id="chartContainer" style="height: 370px; width: 50%;"></div>

@@ -222,3 +222,51 @@ def select_history_for_country(tableName, country):
     conn.close()
 
     return result
+
+
+def select_distinct_data(tableName):
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
+    cursor = conn.cursor()
+    format_str = """SELECT DISTINCT date FROM "{table}";"""
+    sql_command = format_str.format(table=tableName)
+    cursor.execute(sql_command)
+    result = cursor.fetchall()
+    # close the connection
+    conn.close()
+
+    return result
+
+
+def select_maximum_cases(tableName ,cases, country):
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
+    cursor = conn.cursor()
+    format_str = """SELECT max("{cases}") FROM "{table}" WHERE country="{country}" AND "{cases}" <>"";"""
+    sql_command = format_str.format(table=tableName, cases=cases, country=country)
+    cursor.execute(sql_command)
+    result = cursor.fetchall()
+    # close the connection
+    conn.close()
+
+    return result
+
+
+def select_specific_cases(tableName, cases, country):
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
+    cursor = conn.cursor()
+    format_str = """SELECT "{cases}" FROM "{table}" WHERE country="{country}";"""
+    sql_command = format_str.format(table=tableName, cases=cases, country=country)
+    cursor.execute(sql_command)
+    result = cursor.fetchall()
+    # close the connection
+    conn.close()
+
+    return result
