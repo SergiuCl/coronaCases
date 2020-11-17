@@ -108,3 +108,11 @@ def dict_factory(cursor, row):
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
+
+
+def get_value_list(data, dictKey):
+
+    result = []
+    for i in range(len(data)):
+        result.append(data[i][dictKey])
+    return result

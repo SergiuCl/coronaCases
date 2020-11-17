@@ -2,7 +2,7 @@ from flask import Flask, flash, jsonify, redirect, render_template, request, ses
 from apscheduler.schedulers.background import BackgroundScheduler
 from dbQRYsCoronaCases import select_cases, get_cases_world, select_cases_where_country, select_countries, select_history_for_country, select_distinct_data, select_maximum_cases, select_specific_cases
 from dbQRYsSubscribe import select_user, insert_user, remove_user, select_all_users
-from helpers import get_news, get_dict_news, dict_factory
+from helpers import get_news, get_dict_news, dict_factory, get_value_list
 import requests
 import json
 import time, threading
@@ -41,7 +41,7 @@ def show_item_info(content):
     
     # get news in dictionary
     mylist = get_dict_news()
-
+    contentImg = None
     # for every row in dict
     # ensure content corresponds to title
     for row in mylist:
@@ -87,10 +87,8 @@ def cases_history(content):
                 # get the dates for the chart
                 historyDates = select_distinct_data(tblHistory)
                 dates = []
-
                 # append the dates to the list dates
-                for i in range(len(historyDates)):
-                    dates.append(historyDates[i]['date'])
+                dates = get_value_list(historyDates, "date")
                 
                 # get the maximum number of cases
                 maximumActive = select_maximum_cases(tblHistory, "active", content)
@@ -110,7 +108,16 @@ def cases_history(content):
                 activeCases = select_specific_cases("casesWorld", "active", content)
                 deaths = select_specific_cases("casesWorld", "deaths", content)
 
-    return render_template('history.html', context=content, newCases=newCases[0]['new'], maximumActive=activeCases[0]['active'], maximumDeaths=deaths[0]['deaths'], dates=dates)
+                newCasesHistory = select_specific_cases("history", "new", content)
+                activeCasesHistory = select_specific_cases("history", "active", content)
+                deathsHistory = select_specific_cases("history", "deaths", content)
+
+                newCasesHistoryList = get_value_list(newCasesHistory, "new")
+                activeCasesHistoryList = get_value_list(activeCasesHistory, "active")
+                deathsHistoryList = get_value_list(deathsHistory, "deaths")
+
+    return render_template('history.html', context=content, newCases=newCasesHistoryList, maximumActive=activeCasesHistoryList, maximumDeaths=deathsHistoryList, dates=dates)
+    #return render_template('history.html', context=content, newCases=newCases[0]['new'], maximumActive=activeCases[0]['active'], maximumDeaths=deaths[0]['deaths'], dates=dates)
     #return render_template('history.html', context=content, newCases=maximumNew[0]['max("new")'], maximumActive=maximumActive[0]['max("active")'], maximumDeaths=maximumDeaths[0]['max("deaths")'])
 
 
@@ -159,13 +166,10 @@ def subscribe():
                     flash('You have successfully subscribed', 'success')
                     return redirect(url_for('subscribe'))
     else:
-
         # Configure SQLite database
         countries = select_countries("casesWorld")
         countriesList = []
-
-        for i in range(len(countries)):
-            countriesList.append(countries[i]['country'])
+        countriesList = get_value_list(countries, "country")
 
         return render_template("subscription.html", countries=countriesList)
 
