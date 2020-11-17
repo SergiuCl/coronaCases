@@ -34,8 +34,8 @@
                             <td style="background-color: cadetblue; font-weight: bold;">
                                 <a href="/history/{{ value }}">{{ value }}</a>
                             </td>
-                        {% elif (key == "newDeaths" or key == "newCases") and value.startswith('+') %}
-                            <td style="background-color: cadetblue; font-weight: bold; color:red;">{{ value }}</td>
+                        {% elif (key == "deaths" or key == "new") and value != "" %}
+                            <td style="background-color: cadetblue; font-weight: bold; color:red;"><p>+{{ value }}</p></td>
                         {% else %}
                             <td style="background-color: cadetblue; font-weight: bold;">{{ value }}</td>
                         {% endif %}
@@ -51,8 +51,8 @@
                                 <td>
                                     <a href="/history/{{ value }}" target="_blank">{{ value }}</a>
                                 </td>
-                            {% elif (key == "newDeaths" or key == "newCases") and value.startswith('+') %}
-                                    <td style="color: red;"> {{ value }}</td>
+                            {% elif (key == "deaths" or key == "new") and value != "" %}
+                                    <td style="color: red;"> <p>+{{ value }}</p></td>
                             {% else %}
                                 <td> {{ value }}</td>
                             {% endif %}   
