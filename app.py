@@ -56,6 +56,7 @@ def show_item_info(content):
 @app.route("/casesInAustria")
 def casesInAustria():
     
+    # get the cases for Austria and show them in the table
     tblCasesWorld = "casesWorld"
     country = "Austria"
     tableValues = {}
@@ -66,6 +67,7 @@ def casesInAustria():
 @app.route("/casesWorld")
 def casesWorld():
 
+    # get all the cases and show them in table
     tblCasesWorld = "casesWorld"
     tableValues = {}
     totalCases = {}
@@ -89,20 +91,6 @@ def cases_history(content):
                 dates = []
                 # append the dates to the list dates
                 dates = get_value_list(historyDates, "date")
-                
-                # get the maximum number of cases
-                maximumActive = select_maximum_cases(tblHistory, "active", content)
-                print(maximumActive)
-                maximumNew = select_maximum_cases(tblHistory, "new", content)
-                print(maximumNew)
-                maximumDeaths = select_maximum_cases(tblHistory, "deaths", content)
-                print(maximumDeaths)
-                maximumTotalCases = select_maximum_cases(tblHistory, "totalCases", content)
-                print(maximumTotalCases)
-                maximumTotalRecovered = select_maximum_cases(tblHistory, "totalRecovered", content)
-                print(maximumTotalRecovered)
-                maximumTotalDeaths = select_maximum_cases(tblHistory, "totalDeaths", content)
-                print(maximumTotalDeaths)
 
                 newCases = select_specific_cases("casesWorld", "new", content)
                 activeCases = select_specific_cases("casesWorld", "active", content)
@@ -112,18 +100,24 @@ def cases_history(content):
                 activeCasesHistory = select_specific_cases("history", "active", content)
                 deathsHistory = select_specific_cases("history", "deaths", content)
 
+                newCasesHistoryList = []
                 newCasesHistoryList = get_value_list(newCasesHistory, "new")
+                activeCasesHistoryList = []
                 activeCasesHistoryList = get_value_list(activeCasesHistory, "active")
+                deathsHistoryList = []
                 deathsHistoryList = get_value_list(deathsHistory, "deaths")
 
-    return render_template('history.html', context=content, newCases=newCasesHistoryList, maximumActive=activeCasesHistoryList, maximumDeaths=deathsHistoryList, dates=dates)
+    return render_template('history.html', context=content, newCases=json.dumps(newCasesHistoryList), active=json.dumps(activeCasesHistoryList), newDeaths=json.dumps(deathsHistoryList), dates=json.dumps(dates))
     #return render_template('history.html', context=content, newCases=newCases[0]['new'], maximumActive=activeCases[0]['active'], maximumDeaths=deaths[0]['deaths'], dates=dates)
     #return render_template('history.html', context=content, newCases=maximumNew[0]['max("new")'], maximumActive=maximumActive[0]['max("active")'], maximumDeaths=maximumDeaths[0]['max("deaths")'])
 
 
 @app.route("/subscription", methods=["GET", "POST"])
 def subscribe():
+
     if request.method == "POST":
+         
+         # get the data from user
         emailAdress = request.form.get("email")
         name = request.form.get("name")
         unsubscribe = request.form.get("unsubscribe")
@@ -137,7 +131,6 @@ def subscribe():
         elif not country:
             flash("Please choose a country")
         else:
-            print(country)
             # if user checked the box unsubscribe
             # remove user from table
             if unsubscribe:
@@ -152,7 +145,7 @@ def subscribe():
                     flash('You are not a subscriber of our newsletter', 'success')
                     return redirect(url_for('subscribe'))
             else:
-                # check if user already exist
+                # check if user already exists
                 checkUser = select_user(emailAdress)
 
                 # check if query returns any values
@@ -183,5 +176,3 @@ scheduler.start()
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-    

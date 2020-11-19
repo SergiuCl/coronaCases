@@ -21,18 +21,21 @@ def update_cases_world(APIData):
     # get the values from table, WHERE country is "world" - that means the total number of cases
     country = "World"
     tblValues = select_cases_where_country(tblCasesWorld, country)
-    # ensure dict is not None
-    # if the value did not change, exit function
-    # else, update the table
+    
+    """ ensure dict is not None
+    if the value did not change, exit function
+    else, insert the data in the tables -> email the subscribers """
     if bool(tblValues):
-        # compare the values from table with the values from API
+        """
+        compare the values from table with the values from API
+        if values are equal, do nothind
+        else - update the table casesWorld -> insert the data in the tbl history -> email the subscribers
+        """
         if tblValues[0]['totalCases'] == convert_to_int(APIData[0]['Total Cases_text']):
             return
         else:
             update_query_world(APIData)
-            # if new data, insert it into history
             insert_into_history(APIData)
-            # send an email to subscribers
             email_to_subscribers()
     else:
         insert_query(APIData)
@@ -46,7 +49,7 @@ def insert_query(APIData):
     conn = sqlite3.connect('coronaDatabase.db')
     cursor = conn.cursor()
     currDate = date.today()
-    # for each row in APIData
+    # insert each row from APIData in tbl
     for row in APIData:
         # many key errors from API. solve the problems with a try block
         try:
@@ -75,7 +78,7 @@ def insert_into_history(APIData):
     tblHistory = "history"
     todayValues = {}
 
-    # for each row in APIData
+    # insert each row from APIData in tbl
     for row in APIData:
         # many key errors. solve the problems with try block
         try:
@@ -83,11 +86,9 @@ def insert_into_history(APIData):
             todayValues = select_cases_where_country_date(tblHistory, row['Country_text'], today)
         except KeyError:
             continue
-        
-        """
-        check if today date for current country is already in the database
-        if not, insert the data of the current date
-        """ 
+    
+        """ check if today date for current country is already in the database
+        if not, insert the data of the current date """
         if bool(todayValues):
             continue
         else:
@@ -116,6 +117,7 @@ def update_query_world(APIData):
     cursor = conn.cursor()
     currDate = date.today()
     
+    # update the tbl with the data from APIData
     for row in APIData:
         try:
             format_str = """UPDATE casesWorld 
@@ -149,9 +151,6 @@ def select_cases(tableName):
     sql_command = format_str.format(table=tableName)
     cursor.execute(sql_command)
     result = cursor.fetchall()
-    # make a select query and save the result in result
-    #result = cursor.execute("SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM :tableName", {"tableName": tableName}).fetchall()
-    
     # close the connection
     conn.close()
 
@@ -184,7 +183,6 @@ def select_cases_where_country_date(tableName, country, date):
     format_str = """SELECT * FROM "{table}" WHERE country="{countryName}" AND date="{dateUnix}";"""
     sql_command = format_str.format(table=tableName, countryName=country, dateUnix=date)
     cursor.execute(sql_command)
-    #result = cursor.execute("SELECT * FROM :tableName WHERE country=:country AND date=:date", {"tableName": tableName, "country": country, "date": date}).fetchall()
     result = cursor.fetchall()
     # close the connection
     conn.close()

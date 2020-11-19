@@ -29,8 +29,12 @@
                 {% for dict_item in casesAustria %}
                 <tr>
                     {% for key, value in dict_item.items() %}
-                        {% if (key == "newDeaths" or key == "newCases") and value.startswith('+') %}
-                            <td style="color: red;"> {{ value }}</td>
+                        {% if (key == "country") %}
+                        <td>
+                            <a href="/history/{{ value }}" target="_blank">{{ value }}</a>
+                        </td>
+                        {% elif (key == "deaths" or key == "new") and value != "" %}
+                            <td style="color: red;"> <p>+{{ value }}</p></td>
                         {% else %}
                             <td> {{ value }}</td>
                         {% endif %}

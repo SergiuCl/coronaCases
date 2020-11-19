@@ -61,10 +61,12 @@ def send_email(emailAdress, username, country, newCases, totalCases):
   html = """\
   <html>
     <body>
-      <p>Hi {name},<br>
-      <p>Below you can find the new number of Corona cases in {country}</p><br>
+      <p>Hi {name},<p><br>
+      <p>below you can find the new number of Corona cases in {country}:</p><br>
       <p style="color:red;">New Cases: {newCases}</p>
-      <p>Total Cases: {totalCases}</p>
+      <p>Total Cases: {totalCases}</p><br>
+      <p>Best Regards,</p>
+      <p>Sergiu</p>
     </body>
   </html>
   """.format(name=username, newCases=newCases, country=country, totalCases=totalCases)

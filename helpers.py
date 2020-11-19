@@ -2,6 +2,7 @@ from newsapi import NewsApiClient
 import http.client
 import json
 
+
 def get_news():
 
     # get a news API
@@ -29,6 +30,7 @@ def get_news():
 
 
 def get_dict_news():
+
     # get a news API
     newsapi = NewsApiClient(api_key="ac881b4ffacf4b37a3d574832e6653c5")
     # get the top headlines from API
@@ -85,9 +87,9 @@ def get_API_News_world():
 
 def convert_to_int(str):
     
-    # check if str is empty or N/A
-    # if yes, return an empty string
-    # else replace comma with space and convert the str into an int
+    """ check if str is empty or N/A
+    if yes, return an empty string
+    else replace comma with space and convert the str into an int """
     if not str or str == "N/A":
         s = ''
         return s
@@ -104,12 +106,14 @@ def convert_to_int(str):
 
 # define a function to get the data from SQLite3 in dict instead of tuple
 def dict_factory(cursor, row):
+
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
 
 
+# define a function to append the data from querys to a list
 def get_value_list(data, dictKey):
 
     result = []
