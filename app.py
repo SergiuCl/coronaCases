@@ -92,13 +92,13 @@ def cases_history(content):
                 # append the dates to the list dates
                 dates = get_value_list(historyDates, "date")
 
-                newCases = select_specific_cases("casesWorld", "new", content)
-                activeCases = select_specific_cases("casesWorld", "active", content)
-                deaths = select_specific_cases("casesWorld", "deaths", content)
+                #newCases = select_specific_cases("casesWorld", "new", content)
+                #activeCases = select_specific_cases("casesWorld", "active", content)
+                #deaths = select_specific_cases("casesWorld", "deaths", content)
 
-                newCasesHistory = select_specific_cases("history", "new", content)
-                activeCasesHistory = select_specific_cases("history", "active", content)
-                deathsHistory = select_specific_cases("history", "deaths", content)
+                #newCasesHistory = select_specific_cases("history", "new", content)
+                #activeCasesHistory = select_specific_cases("history", "active", content)
+                #deathsHistory = select_specific_cases("history", "deaths", content)
 
                 newCasesHistoryList = []
                 newCasesHistoryList = get_value_list(newCasesHistory, "new")
