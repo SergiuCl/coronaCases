@@ -15,6 +15,7 @@ def select_user(emailAdress):
     conn.close()
     return user
 
+
 def insert_user(emailAdress, name, country):
     
     # Configure SQLite database
@@ -27,6 +28,7 @@ def insert_user(emailAdress, name, country):
     # close the connection
     conn.close()
     return
+
 
 def remove_user(emailAdress):
 
@@ -41,6 +43,7 @@ def remove_user(emailAdress):
     conn.close()
     return
 
+
 def select_all_users():
 
     # Configure SQLite database
@@ -53,3 +56,17 @@ def select_all_users():
     # close the connection
     conn.close()
     return users
+
+
+def update_user(emailAdress, country):
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
+    format_str = """UPDATE subscribers SET country="{country}" WHERE emailAdress="{emailAdress}";"""
+    sql_command = format_str.format(country=country, emailAdress=emailAdress)
+    cursor.execute(sql_command)
+    conn.commit()
+    conn.close()
+
+    return

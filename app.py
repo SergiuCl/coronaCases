@@ -169,7 +169,7 @@ def subscribe():
 
 @app.route("/manageUsers", methods=["GET", "POST"])
 def manageUsers():
-
+    
     return render_template("manageUsers.html")
 
 
