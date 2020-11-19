@@ -3,7 +3,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from string import Template
-from dbQRYsSubscribe import select_all_users
+from subscribeDAO import select_all_users
 from helpers import dict_factory
 import sqlite3
 #from dbQRYsCoronaCases import select_cases

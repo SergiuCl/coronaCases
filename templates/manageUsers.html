@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Subscribe
+{% endblock %}
+
+{% block main %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+        <div class="flash {{category}}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<form class="text-center border border-light p-5"  action="/manageUsers" method="post">
+    <p class="h4 mb-4">Subscribe</p>
+    <div class="form-group">
+        <!-- Email -->
+        <input type="email" id="defaultLoginFormEmail"  name="email" class="form-control mb-4" placeholder="E-mail" required>
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+
+    <!-- Name -->
+    <input type="search" id="defaultLoginFormName" name="name" class="form-control mb-4" placeholder="First and Last Name" required>
+    <br>
+    <div>
+        <select name="countries" id="defaultLoginFormName" class="form-control mb-4" method="GET">
+            <!--<option value="{{countries[0]}}" selected>{{countries[0]}}</option>-->
+            <!--{% for country in countries %}
+                <option value="{{country}}">{{country}}</option>"
+            {% endfor %}  -->  
+        </select>
+        <small id="countryHelp" class="form-text text-muted">Choose the country you want to get updates from.</small>
+    </div>
+    <br>
+    <div class="d-flex justify-content-around">
+        <div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="unsubscribe">
+                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+              </div>
+        </div>
+    </div>
+    <!-- Submit button -->
+    <button class="btn btn-info btn-block my-4" type="submit">Submit</button>
+</form>
+
+<div class="container">
+
+</div>
+
+
+{% endblock %}

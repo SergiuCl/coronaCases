@@ -1,6 +1,6 @@
 from helpers import get_API_News_austria, get_API_News_world, convert_to_int, dict_factory
 from datetime import date
-from send import email_to_subscribers
+from mail import email_to_subscribers
 from contextlib import closing
 import http.client
 import json

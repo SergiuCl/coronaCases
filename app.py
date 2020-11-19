@@ -1,7 +1,7 @@
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from apscheduler.schedulers.background import BackgroundScheduler
-from dbQRYsCoronaCases import select_cases, get_cases_world, select_cases_where_country, select_countries, select_history_for_country, select_distinct_data, select_maximum_cases, select_specific_cases
-from dbQRYsSubscribe import select_user, insert_user, remove_user, select_all_users
+from coronaCasesDao import select_cases, get_cases_world, select_cases_where_country, select_countries, select_history_for_country, select_distinct_data, select_maximum_cases, select_specific_cases
+from subscribeDAO import select_user, insert_user, remove_user, select_all_users
 from helpers import get_news, get_dict_news, dict_factory, get_value_list
 import requests
 import json
@@ -165,6 +165,13 @@ def subscribe():
         countriesList = get_value_list(countries, "country")
 
         return render_template("subscription.html", countries=countriesList)
+
+
+@app.route("/manageUsers", methods=["GET", "POST"])
+def manageUsers():
+
+    return render_template("manageUsers.html")
+
 
 
 # set a background scheduler
