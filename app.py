@@ -1,7 +1,7 @@
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from apscheduler.schedulers.background import BackgroundScheduler
-from coronaCasesDao import select_cases, get_cases_world, select_cases_where_country, select_countries, select_history_for_country, select_distinct_data, select_maximum_cases, select_specific_cases
-from subscribeDAO import select_user, insert_user, remove_user, select_all_users
+from coronaCasesDAO import select_cases, get_cases_world, select_cases_where_country, select_countries, select_history_for_country, select_distinct_data, select_maximum_cases, select_specific_cases
+from subscribeDAO import select_user, insert_user, remove_user, select_all_users, update_user
 from helpers import get_news, get_dict_news, dict_factory, get_value_list
 import requests
 import json
@@ -85,7 +85,9 @@ def cases_history(content):
         for row in tableValues:
             if content in row['country']:
                 content = row['country']
-                countryData = select_history_for_country(tblHistory, content)
+
+                #countryData = select_history_for_country(tblHistory, content)
+
                 # get the dates for the chart
                 historyDates = select_distinct_data(tblHistory)
                 dates = []
@@ -159,7 +161,6 @@ def subscribe():
                     flash('You have successfully subscribed', 'success')
                     return redirect(url_for('subscribe'))
     else:
-        # Configure SQLite database
         countries = select_countries("casesWorld")
         countriesList = []
         countriesList = get_value_list(countries, "country")
@@ -169,8 +170,55 @@ def subscribe():
 
 @app.route("/manageUsers", methods=["GET", "POST"])
 def manageUsers():
-    
-    return render_template("manageUsers.html")
+
+    if request.method == "POST":
+
+        # get the data from user
+        emailAdress = request.form.get("email")
+        action = request.form.get("querys")
+        name = request.form.get("name")
+        country = request.form.get("countries")
+
+        # ensure user provide an email and a name
+        if not emailAdress:
+            flash("Please provide an email")
+        else:
+            if action == "Update":
+                # check if user already exists
+                checkUser = select_user(emailAdress)
+                # check if query returns any values
+                if bool(checkUser):
+                    update_user(emailAdress, country)
+                    flash('The user has been successfully updated')
+                    return redirect(url_for('manageUsers'))
+                else:
+                    flash('The specified user does not exist')
+                    return redirect(url_for('manageUsers'))
+            elif action == "Create":
+                 # check if user already exists
+                checkUser = select_user(emailAdress)
+                """ check if query returns any values
+                if yes, inform the user
+                else insert it into th table """
+                if bool(checkUser):
+                    flash('The specified user already exists')
+                    return redirect(url_for('manageUsers'))
+                else:
+                    insert_user(emailAdress, name, country)
+                    flash('The user has been successfully created')
+                    return redirect(url_for('manageUsers'))
+            else:
+                remove_user(emailAdress)
+                flash('The user has been successfully removed')
+                return redirect(url_for('manageUsers'))
+
+    else:    
+        querys = ['Create', 'Remove', 'Update']
+        countries = select_countries("casesWorld")
+        countriesList = []
+        countriesList = get_value_list(countries, "country")
+
+    return render_template("manageUsers.html", querys=querys, countries=countriesList)
 
 
 
