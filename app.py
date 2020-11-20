@@ -226,7 +226,7 @@ def manageUsers():
 # set a background scheduler
 scheduler = BackgroundScheduler()
 # set a scheduler with interval 3 minute    
-job1 = scheduler.add_job(get_cases_world, 'interval', minutes=0.2)
+job1 = scheduler.add_job(get_cases_world, 'interval', minutes=10)
 # start the scheduler
 scheduler.start()
 
