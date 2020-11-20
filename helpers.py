@@ -80,7 +80,7 @@ def get_API_News_world():
     conn.close()
 
     # load the data in JSON
-    casesWorld = json.loads(data)
+    casesWorld = json.loads(data.decode('utf-8'))
 
     return casesWorld
 
