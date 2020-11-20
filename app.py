@@ -217,6 +217,7 @@ def manageUsers():
         countries = select_countries("casesWorld")
         countriesList = []
         countriesList = get_value_list(countries, "country")
+        action = request.form.get("querys")
 
     return render_template("manageUsers.html", querys=querys, countries=countriesList)
 
