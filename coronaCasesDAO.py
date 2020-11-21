@@ -122,13 +122,10 @@ def update_query_world(APIData):
             # compare the number of cases from API with the number from table - update tbl if not equal
             totalCasesAPI = convert_to_int(row['Total Cases_text'])
             totalCasesDB = select_cases_where_country("casesWorld", row['Country_text'])
-        except KeyError:
-            continue
         
-        if totalCasesDB[0]['totalCases'] == totalCasesAPI:
-            continue
-        else:
-            try:
+            if totalCasesDB[0]['totalCases'] == totalCasesAPI:
+                continue
+            else:
                 format_str = """UPDATE casesWorld 
                                 SET active="{activeCases}",
                                 new="{newCases}",
@@ -137,15 +134,15 @@ def update_query_world(APIData):
                                 totalDeaths="{totalDeaths}",
                                 totalRecovered="{totalRecovered}",
                                 date="{lastUpdate}" WHERE country="{countryName}";"""
-                
+                    
                 sql_command = format_str.format(countryName=row['Country_text'], activeCases=convert_to_int(row['Active Cases_text']),
                                                 newCases=convert_to_int(row['New Cases_text']), newDeaths=convert_to_int(row['New Deaths_text']),
                                                 totalCases=convert_to_int(row['Total Cases_text']), totalDeaths=convert_to_int(row['Total Deaths_text']),
                                                 totalRecovered=convert_to_int(row['Total Recovered_text']), lastUpdate=currDate)
                 cursor.execute(sql_command)
-            except KeyError:
-                continue
-            email_to_subscribers(row['Country_text'], convert_to_int(row['New Cases_text']), convert_to_int(row['Total Cases_text']))
+        except KeyError:
+            continue
+        email_to_subscribers(row['Country_text'], convert_to_int(row['New Cases_text']), convert_to_int(row['Total Cases_text']))
 
     conn.commit()
     # close the connection

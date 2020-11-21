@@ -44,22 +44,6 @@
                 {% endfor %}
             </tfoot>
             <tbody>
-               <!-- {% for dict_item in casesWorld %}
-                    <tr>
-                        {% for key, value in dict_item.items() %}
-                            {% if (key == "country") %}
-                                <td>
-                                    <a href="/history/{{ value }}" target="_blank">{{ value }}</a>
-                                </td>
-                            {% elif (key == "deaths" or key == "new") and value != "" %}
-                                    <td style="color: red;"> <p>+{{ value }}</p></td>
-                            {% else %}
-                                <td> {{ value }}</td>
-                            {% endif %}   
-                        {% endfor %}
-                    </tr>
-                    
-                {% endfor %}-->
             {% for dict_item in casesWorld %}
                 <tr>
                         <td>
