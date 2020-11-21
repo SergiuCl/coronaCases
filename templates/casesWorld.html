@@ -44,7 +44,7 @@
                 {% endfor %}
             </tfoot>
             <tbody>
-                {% for dict_item in casesWorld %}
+               <!-- {% for dict_item in casesWorld %}
                     <tr>
                         {% for key, value in dict_item.items() %}
                             {% if (key == "country") %}
@@ -59,7 +59,46 @@
                         {% endfor %}
                     </tr>
                     
-                {% endfor %}
+                {% endfor %}-->
+            {% for dict_item in casesWorld %}
+                <tr>
+                        <td>
+                            {% set country = dict_item.get("country") %}
+                            <a href="/history/{{ country }}">{{ country }}</a>
+                        </td>
+                        <td>
+                            {{dict_item.get("active")}}
+                        </td>
+                        <td style="color: red;">
+                            {% set new = dict_item.get("new") %}
+                            {% if new != "" %}
+                                <p>+{{ new }}</p>
+                            {% else %}
+                                <p></p>
+                            {% endif %} 
+                        </td>
+                        <td style="color: red;">
+                            {% set deaths = dict_item.get("deaths") %}
+                            {% if deaths != "" %}
+                                <p>+{{ deaths }}</p>
+                            {% else %}
+                                <p></p>
+                            {% endif %} 
+                        </td>
+                        <td>
+                            {{dict_item.get("totalCases")}}
+                        </td>
+                        <td>
+                            {{dict_item.get("totalDeaths")}}
+                        </td>
+                        <td>
+                            {{dict_item.get("totalRecovered")}}
+                        </td>
+                        <td>
+                            {{dict_item.get("date")}}
+                        </td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
