@@ -36,10 +36,8 @@ def update_cases_world(APIData):
         else:
             update_query_world(APIData)
             insert_into_history(APIData)
-            email_to_subscribers()
     else:
         insert_query(APIData)
-        email_to_subscribers()
         insert_into_history(APIData)
 
 
@@ -64,6 +62,7 @@ def insert_query(APIData):
             cursor.execute(sql_command)
         except KeyError:
             continue
+        email_to_subscribers(row['Country_text'], convert_to_int(row['New Cases_text']), convert_to_int(row['Total Cases_text']))
     conn.commit()
     # close the connection
     conn.close()
@@ -120,25 +119,37 @@ def update_query_world(APIData):
     # update the tbl with the data from APIData
     for row in APIData:
         try:
-            format_str = """UPDATE casesWorld 
-                            SET active="{activeCases}",
-                            new="{newCases}",
-                            deaths="{newDeaths}",
-                            totalCases="{totalCases}",
-                            totalDeaths="{totalDeaths}",
-                            totalRecovered="{totalRecovered}",
-                            date="{lastUpdate}" WHERE country="{countryName}";"""
-            
-            sql_command = format_str.format(countryName=row['Country_text'], activeCases=convert_to_int(row['Active Cases_text']),
-                                            newCases=convert_to_int(row['New Cases_text']), newDeaths=convert_to_int(row['New Deaths_text']),
-                                            totalCases=convert_to_int(row['Total Cases_text']), totalDeaths=convert_to_int(row['Total Deaths_text']),
-                                            totalRecovered=convert_to_int(row['Total Recovered_text']), lastUpdate=currDate)
-            cursor.execute(sql_command)
+            # compare the number of cases from API with the number from table - update tbl if not equal
+            totalCasesAPI = convert_to_int(row['Total Cases_text'])
+            totalCasesDB = select_cases_where_country("casesWorld", row['Country_text'])
         except KeyError:
             continue
+        
+        if totalCasesDB[0]['totalCases'] == totalCasesAPI:
+            continue
+        else:
+            try:
+                format_str = """UPDATE casesWorld 
+                                SET active="{activeCases}",
+                                new="{newCases}",
+                                deaths="{newDeaths}",
+                                totalCases="{totalCases}",
+                                totalDeaths="{totalDeaths}",
+                                totalRecovered="{totalRecovered}",
+                                date="{lastUpdate}" WHERE country="{countryName}";"""
+                
+                sql_command = format_str.format(countryName=row['Country_text'], activeCases=convert_to_int(row['Active Cases_text']),
+                                                newCases=convert_to_int(row['New Cases_text']), newDeaths=convert_to_int(row['New Deaths_text']),
+                                                totalCases=convert_to_int(row['Total Cases_text']), totalDeaths=convert_to_int(row['Total Deaths_text']),
+                                                totalRecovered=convert_to_int(row['Total Recovered_text']), lastUpdate=currDate)
+                cursor.execute(sql_command)
+            except KeyError:
+                continue
+            email_to_subscribers(row['Country_text'], convert_to_int(row['New Cases_text']), convert_to_int(row['Total Cases_text']))
+
     conn.commit()
     # close the connection
-    conn.close()    
+    conn.close()
 
 
 def select_cases(tableName):

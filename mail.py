@@ -3,42 +3,25 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from string import Template
-from subscribeDAO import select_all_users
+from subscribeDAO import select_all_users, select_all_users_where_country
 from helpers import dict_factory
-import sqlite3
-#from dbQRYsCoronaCases import select_cases
 
 
 """ every time the cases update in table
     send an email to all the subscribers from the database
     the function is called in dbQRYsCoronaCases only if the tables update
 """
-def email_to_subscribers():
+def email_to_subscribers(country, new, totalCases):
 
   subscribers = {}
-  subscribers =  select_all_users()
-  # Configure SQLite database
-  conn = sqlite3.connect('coronaDatabase.db')
-  conn.row_factory = dict_factory
-  cursor = conn.cursor()
-  sql_command = """SELECT * FROM casesWorld;"""
-  cursor.execute(sql_command)
-  tblValues = cursor.fetchall()
+  subscribers =  select_all_users_where_country(country)
   
   # if subscribers and tblValues contain data
   if bool(subscribers):
-    if bool(tblValues):
-      # get the values from country, email and name from every row in dict
-      for row in subscribers:
-        country = row['country']
-        emailAdress = row['emailAdress']
-        name = row['Name']
-        # go through the values from tblValues
-        # if country from tblValues is country from subscribers
-        # send an email to the user with the data from that country
-        for data in tblValues:
-          if data['country'] == country:
-            send_email(emailAdress, name, country, data['new'], data['totalCases'])
+    for row in subscribers:
+      emailAdress = row['emailAdress']
+      name = row['Name']
+      send_email(emailAdress, name, country, new, totalCases)
   return
 
 

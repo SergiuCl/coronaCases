@@ -58,6 +58,21 @@ def select_all_users():
     return users
 
 
+def select_all_users_where_country(country):
+    
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
+    cursor = conn.cursor()
+    format_str = """SELECT * FROM subscribers WHERE country="{country}";"""
+    sql_command = format_str.format(country=country)
+    cursor.execute(sql_command)
+    users = cursor.fetchall()
+    # close the connection
+    conn.close()
+    return users
+
+
 def update_user(emailAdress, country):
 
     # Configure SQLite database
