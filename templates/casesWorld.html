@@ -28,15 +28,15 @@
             </thead>
             <tfoot>
                 {% for dict_item in totalCases %}
-                <tr>
-                    <td style="background-color: cadetblue; font-weight: bold;">
+                <tr style="background-color: cadetblue; font-weight: bold;">
+                    <td >
                         {% set country = dict_item.get("country") %}
                         <a href="/history/{{ country }}" target="_blank">{{ country }}</a>
                     </td>
                     <td>
                         {{dict_item.get("active")}}
                     </td>
-                    <td style="background-color: cadetblue; font-weight: bold; color:red;">
+                    <td style="color:red;">
                         {% set new = dict_item.get("new") %}
                         {% if new != "" %}
                             <p>+{{ new }}</p>
@@ -44,7 +44,7 @@
                             <p></p>
                         {% endif %} 
                     </td>
-                    <td style="background-color: cadetblue; font-weight: bold; color:red;">
+                    <td style="color:red;">
                         {% set deaths = dict_item.get("deaths") %}
                         {% if deaths != "" %}
                             <p>+{{ deaths }}</p>
@@ -52,16 +52,16 @@
                             <p></p>
                         {% endif %} 
                     </td>
-                    <td style="background-color: cadetblue; font-weight: bold;">
+                    <td>
                         {{dict_item.get("totalCases")}}
                     </td>
-                    <td style="background-color: cadetblue; font-weight: bold;">
+                    <td>
                         {{dict_item.get("totalDeaths")}}
                     </td>
-                    <td style="background-color: cadetblue; font-weight: bold;">
+                    <td>
                         {{dict_item.get("totalRecovered")}}
                     </td>
-                    <td style="background-color: cadetblue; font-weight: bold;">
+                    <td>
                         {{dict_item.get("date")}}
                     </td>
                 </tr>

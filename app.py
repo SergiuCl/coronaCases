@@ -159,14 +159,69 @@ def subscribe():
         return render_template("subscription.html", countries=countriesList)
 
 
-@app.route("/usersTable")
+@app.route("/usersTable", methods=["GET", "POST"])
 def usersTable():
+    if request.method == "POST":
+        emailAddrress = request.form.get("emailAddress")
+        print(emailAddrress)
+    else: 
+        users = select_all_users()
+        return render_template("usersTable.html", users=users)
 
-    users = select_all_users()
-    return render_template("usersTable.html", users=users)
+
+@app.route("/manageUsers/<action>/<emailAddress>", methods=["GET", "POST"])
+def manageUsers(action, emailAddress):
+    
+    if request.method == "POST":
+        if action == "create":
+            # get the data from user
+            emailAdress = request.form.get("email")
+            name = request.form.get("name")
+            country = request.form.get("countries")
+            # ensure user provide an email and a name
+            if not emailAdress:
+                flash("Please provide an email")
+            elif not name:
+                flash("Please provide a name")
+            elif not country:
+                flash("Please choose a country")
+            else:
+                # check if user already exists
+                checkUser = select_user(emailAdress)
+                """ check if query returns any values
+                if yes, inform the user
+                else insert it into th table """
+                if bool(checkUser):
+                    flash('The specified user already exists')
+                    return redirect(url_for('manageUsers(action, emailAddress)'))
+                else:
+                    insert_user(emailAdress, name, country)
+                    flash('The user has been successfully created')
+                    return redirect(url_for('manageUsers'))
+        elif action == "edit":
+            # check if user already exists
+            checkUser = select_user(emailAdress)
+            # check if query returns any values
+            if bool(checkUser):
+                update_user(emailAdress, country)
+                flash('The user has been successfully updated')
+                return redirect(url_for('manageUsers(action, emailAddress)'))
+            else:
+                flash('The specified user does not exist')
+                #return redirect(url_for('manageUsers(action, emailAddress)'))
+    else:
+        query = action
+        countries = select_countries("casesWorld")
+        countriesList = []
+        countriesList = get_value_list(countries, "country")
+        action = request.form.get("querys")
+
+        return render_template("manageUsers.html", query=query, countries=countriesList, emailAddress=emailAddress)
 
 
-@app.route("/manageUsers", methods=["GET", "POST"])
+
+"""
+@app.route("/manageUsers/", methods=["GET", "POST"])
 def manageUsers():
 
     if request.method == "POST":
@@ -195,9 +250,9 @@ def manageUsers():
             elif action == "Create":
                  # check if user already exists
                 checkUser = select_user(emailAdress)
-                """ check if query returns any values
+                """""" check if query returns any values
                 if yes, inform the user
-                else insert it into th table """
+                else insert it into th table """"""
                 if bool(checkUser):
                     flash('The specified user already exists')
                     return redirect(url_for('manageUsers'))
@@ -219,6 +274,7 @@ def manageUsers():
 
     return render_template("manageUsers.html", querys=querys, countries=countriesList)
 
+"""
 
 
 # set a background scheduler

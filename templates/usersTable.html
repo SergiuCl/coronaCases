@@ -12,43 +12,57 @@
 
 {% block main %}
     <div class="col">
-        <table id="example" class="table table-striped table-bordered" style="width:100%">
-            <thead>
-                <tr style="background-color:cadetblue">
-                    <th>Username</th>
-                    <th>Email Address</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <td>
-                        <a class="btn btn-success" href="manageUsers">Create User</a>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                
-            </tfoot>
-            <tbody>
-                {% for dict_item in users %}
+        <div style="margin-right: 200px; margin-left: 200px;">
+        
+            <table id="example" class="table table-striped " style="width: 100%;" >
+                <thead>
                     <tr>
-                        <td style="font-weight: bold;">
-                            {{dict_item.get("Name")}}
-                        </td>
-                        <td style="font-weight: bold;">
-                            {{dict_item.get("emailAdress")}}
-                        </td>
-                        <td>
-                            <a class="btn btn-info" href="manageUsers?action=edit&type=document&date=now&timestamp=123233245345&familyName=Iordanoaia">Edit</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-danger" href="manageUsers">Delete</a>
-                        </td>
+                        <th>Username</th>
+                        <th>Email Address</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td>
+                            <a class="btn btn-success" href="manageUsers/create/newUser">Create User</a>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    
+                </tfoot>
+                <tbody>
+                <form class="text-center border border-light p-5" style="margin-right: 200px; margin-left: 200px;" action="/usersTable" method="post">
+                    {% for dict_item in users %}
+                        <tr>
+                            <td>
+                                {{dict_item.get("Name")}}
+                            </td>
+                            <td>
+                                {{dict_item.get("emailAdress")}}
+                            </td>
+                            <td>
+                                {% set emailAddress = dict_item.get("emailAdress") %}
+                                <a class="btn btn-info" href="manageUsers/edit/{{ emailAddress }}">Edit</a>
+                            </td>
+                            <td>
+                                {% set emailAddress = dict_item.get("emailAdress") %}
+                                <a class="btn btn-danger" href="manageUsers/delete/{{ emailAddress }}">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </form>
+                </tbody>
+            </table>
+        </div>
+        <script>
+            $(document).ready(function() {
+                $('#example').DataTable({
+        
+                }); 
+            } );
+        </script>        
 {% endblock %}

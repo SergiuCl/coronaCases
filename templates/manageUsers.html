@@ -7,28 +7,6 @@
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 
-    <script>
-
-        $(document).ready(function (){
-            $("#selectQRY").change(function() {
-                // foo is the id of the other select box 
-                if ($(this).val() === "Create") {
-                    $("#defaultLoginFormName").show();
-                    $("#selectCountry").show();
-                }else if ($(this).val() === "Remove"){
-                    $("#defaultLoginFormName").hide();
-                    $("#selectCountry").hide();
-                }else if ($(this).val() === "Update"){
-                    $("#defaultLoginFormName").hide();
-                    $("#selectCountry").show();
-                } 
-            });
-        });
-    </script>
-
-
-
-
 {% endblock %}
 
 
@@ -41,36 +19,44 @@
     {% endfor %}
   {% endif %}
 {% endwith %}
+    {% if query == "create" %}
+        <form class="text-center border border-light p-5" style="margin-right: 200px; margin-left: 200px;"   method="post">
+            <p class="h4 mb-4">{{ query }} {{ emailAddress }}</p>
+                <div class="form-group">
+                    <!-- Email -->
+                    <input type="email" id="defaultLoginFormEmail"  name="email" class="form-control mb-4" placeholder="E-mail" required>
+                </div>
+                <br>
+                <input type="name" id="defaultLoginFormName" name="name" class="form-control mb-4" placeholder="First and Last Name" required>
+                <br>
+                <div id="selectCountry">
+                    <select name="countries" id="selectCountry" class="form-control mb-4" method="GET">
+                        {% for country in countries %}
+                            <option value="{{country}}">{{country}}</option>"
+                        {% endfor %}    
+                    </select>
+                    <small id="selectCountry" class="form-text text-muted">Choose the country you want to get updates for.</small>
+                </div>
+                <br>
+                <button class="btn btn-info btn-block my-4" type="submit">Submit</button>
+        </form>
+    {% elif query == "edit" %}
+        <form class="text-center border border-light p-5" style="margin-right: 200px; margin-left: 200px;"  action="/manageUsers" method="post">
+            <p class="h4 mb-4">{{ query }} {{ emailAddress }}</p>
+            <input type="name" id="defaultLoginFormName" name="name" class="form-control mb-4" placeholder="First and Last Name">
+            <br>
+            <div id="selectCountry">
+                <select name="countries" id="selectCountry" class="form-control mb-4" method="GET">
+                    {% for country in countries %}
+                        <option value="{{country}}">{{country}}</option>"
+                    {% endfor %}    
+                </select>
+                <small id="selectCountry" class="form-text text-muted">Choose the country you want to get updates for.</small>
+            </div>
+            <button class="btn btn-info btn-block my-4" type="submit">Submit</button>
+        </form>
 
-<form class="text-center border border-light p-5" style="margin-right: 200px; margin-left: 200px;"  action="/manageUsers" method="post">
-    <p class="h4 mb-4">Modify Users</p>
-    <div class="form-group">
-        <!-- Email -->
-        <input type="email" id="defaultLoginFormEmail"  name="email" class="form-control mb-4" placeholder="E-mail" required>
-    </div>
-    <br>
-    <div>
-        <select name="querys" id="selectQRY" class="form-control mb-4" method="GET">
-            {% for query in querys %}
-                <option value="{{query}}">{{query}}</option>"
-            {% endfor %}  
-        </select>
-        <small id="selectQRY" class="form-text text-muted">Choose your action.</small>
-    </div>
-    <br>
-    <input type="name" id="defaultLoginFormName" name="name" class="form-control mb-4" placeholder="First and Last Name" required>
-    <br>
-    <div id="selectCountry">
-        <select name="countries" id="selectCountry" class="form-control mb-4" method="GET">
-            {% for country in countries %}
-                <option value="{{country}}">{{country}}</option>"
-            {% endfor %}    
-        </select>
-        <small id="selectCountry" class="form-text text-muted">Choose the country you want to get updates for.</small>
-    </div>
-    <br>
-    <button class="btn btn-info btn-block my-4" type="submit">Submit</button>
-</form>
+    {% endif %}
 
 <div class="container">
 
