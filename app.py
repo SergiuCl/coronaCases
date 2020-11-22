@@ -109,7 +109,7 @@ def cases_history(content):
                 deathsHistoryList = []
                 deathsHistoryList = get_value_list(deathsHistory, "deaths")
 
-    return render_template('history.html', context=content, newCases=json.dumps(newCasesHistoryList), active=json.dumps(activeCasesHistoryList), newDeaths=json.dumps(deathsHistoryList), dates=json.dumps(dates))
+    return render_template('history.html', content=content, newCases=json.dumps(newCasesHistoryList), active=json.dumps(activeCasesHistoryList), newDeaths=json.dumps(deathsHistoryList), dates=json.dumps(dates))
     #return render_template('history.html', context=content, newCases=newCases[0]['new'], maximumActive=activeCases[0]['active'], maximumDeaths=deaths[0]['deaths'], dates=dates)
     #return render_template('history.html', context=content, newCases=maximumNew[0]['max("new")'], maximumActive=maximumActive[0]['max("active")'], maximumDeaths=maximumDeaths[0]['max("deaths")'])
 
