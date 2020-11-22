@@ -5,23 +5,38 @@ from email.mime.multipart import MIMEMultipart
 from string import Template
 from subscribeDAO import select_all_users, select_all_users_where_country
 from helpers import dict_factory
+import sqlite3
 
 
 """ every time the cases update in table
     send an email to all the subscribers from the database
     the function is called in dbQRYsCoronaCases only if the tables update
 """
-def email_to_subscribers(country, new, totalCases):
+def email_to_subscribers(countryList):
 
-  subscribers = {}
-  subscribers =  select_all_users_where_country(country)
-  
-  # if subscribers and tblValues contain data
-  if bool(subscribers):
-    for row in subscribers:
-      emailAdress = row['emailAdress']
-      name = row['Name']
-      send_email(emailAdress, name, country, new, totalCases)
+  # Configure SQLite database
+  conn = sqlite3.connect('coronaDatabase.db')
+  conn.row_factory = dict_factory
+  cursor = conn.cursor()
+
+  for country in countryList:
+    subscribers = {}
+    subscribers =  select_all_users_where_country(country)
+    format_str = """SELECT * FROM casesWorld WHERE country="{countryName}";"""
+    sql_command = format_str.format(countryName=country)
+    cursor.execute(sql_command)
+    cases = cursor.fetchall()
+
+    # if subscribers and tblValues contain data
+    if bool(subscribers):
+      for row in subscribers:
+        emailAddress = row['emailAdress']
+        name = row['Name']
+        send_email(emailAddress, name, country, cases[0]['new'], cases[0]['totalCases'])
+    else:
+      continue
+  # close the connection
+  conn.close()
   return
 
 

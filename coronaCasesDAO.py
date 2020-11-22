@@ -35,10 +35,10 @@ def update_cases_world(APIData):
             return
         else:
             update_query_world(APIData)
-            insert_into_history(APIData)
+           # insert_into_history(APIData)
     else:
         insert_query(APIData)
-        insert_into_history(APIData)
+       # insert_into_history(APIData)
 
 
 def insert_query(APIData):
@@ -47,6 +47,7 @@ def insert_query(APIData):
     conn = sqlite3.connect('coronaDatabase.db')
     cursor = conn.cursor()
     currDate = date.today()
+    countryList = []
     # insert each row from APIData in tbl
     for row in APIData:
         # many key errors from API. solve the problems with a try block
@@ -60,12 +61,17 @@ def insert_query(APIData):
                                             totalCases=convert_to_int(row['Total Cases_text']), totalDeaths=convert_to_int(row['Total Deaths_text']),
                                             totalRecovered=convert_to_int(row['Total Recovered_text']), date=currDate)
             cursor.execute(sql_command)
+            # append each country to the list
+            countryList.append(row['Country_text'])
         except KeyError:
             continue
-        email_to_subscribers(row['Country_text'], convert_to_int(row['New Cases_text']), convert_to_int(row['Total Cases_text']))
     conn.commit()
     # close the connection
     conn.close()
+    # send emails only for the countries in the list
+    
+    email_to_subscribers(countryList)
+
 
 
 def insert_into_history(APIData):
@@ -115,7 +121,7 @@ def update_query_world(APIData):
     conn = sqlite3.connect('coronaDatabase.db')
     cursor = conn.cursor()
     currDate = date.today()
-    
+    countryList = []
     # update the tbl with the data from APIData
     for row in APIData:
         try:
@@ -140,14 +146,16 @@ def update_query_world(APIData):
                                                 totalCases=convert_to_int(row['Total Cases_text']), totalDeaths=convert_to_int(row['Total Deaths_text']),
                                                 totalRecovered=convert_to_int(row['Total Recovered_text']), lastUpdate=currDate)
                 cursor.execute(sql_command)
+                # append each country to the liste
+                countryList.append(row['Country_text'])
         except KeyError:
             continue
-        email_to_subscribers(row['Country_text'], convert_to_int(row['New Cases_text']), convert_to_int(row['Total Cases_text']))
 
     conn.commit()
     # close the connection
     conn.close()
-
+    # send emails only for the countries from the list
+    email_to_subscribers(countryList)
 
 def select_cases(tableName):
 

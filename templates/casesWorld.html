@@ -29,17 +29,41 @@
             <tfoot>
                 {% for dict_item in totalCases %}
                 <tr>
-                    {% for key, value in dict_item.items() %}
-                        {% if (key == "country") %}
-                            <td style="background-color: cadetblue; font-weight: bold;">
-                                <a href="/history/{{ value }}">{{ value }}</a>
-                            </td>
-                        {% elif (key == "deaths" or key == "new") and value != "" %}
-                            <td style="background-color: cadetblue; font-weight: bold; color:red;"><p>+{{ value }}</p></td>
+                    <td style="background-color: cadetblue; font-weight: bold;">
+                        {% set country = dict_item.get("country") %}
+                        <a href="/history/{{ country }}" target="_blank">{{ country }}</a>
+                    </td>
+                    <td>
+                        {{dict_item.get("active")}}
+                    </td>
+                    <td style="background-color: cadetblue; font-weight: bold; color:red;">
+                        {% set new = dict_item.get("new") %}
+                        {% if new != "" %}
+                            <p>+{{ new }}</p>
                         {% else %}
-                            <td style="background-color: cadetblue; font-weight: bold;">{{ value }}</td>
-                        {% endif %}
-                    {% endfor %}
+                            <p></p>
+                        {% endif %} 
+                    </td>
+                    <td style="background-color: cadetblue; font-weight: bold; color:red;">
+                        {% set deaths = dict_item.get("deaths") %}
+                        {% if deaths != "" %}
+                            <p>+{{ deaths }}</p>
+                        {% else %}
+                            <p></p>
+                        {% endif %} 
+                    </td>
+                    <td style="background-color: cadetblue; font-weight: bold;">
+                        {{dict_item.get("totalCases")}}
+                    </td>
+                    <td style="background-color: cadetblue; font-weight: bold;">
+                        {{dict_item.get("totalDeaths")}}
+                    </td>
+                    <td style="background-color: cadetblue; font-weight: bold;">
+                        {{dict_item.get("totalRecovered")}}
+                    </td>
+                    <td style="background-color: cadetblue; font-weight: bold;">
+                        {{dict_item.get("date")}}
+                    </td>
                 </tr>
                 {% endfor %}
             </tfoot>
