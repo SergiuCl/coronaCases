@@ -85,18 +85,11 @@ def cases_history(content):
         for row in tableValues:
             if content in row['country']:
                 content = row['country']
-
-                #countryData = select_history_for_country(tblHistory, content)
-
                 # get the dates for the chart
                 historyDates = select_distinct_data(tblHistory)
                 dates = []
                 # append the dates to the list dates
                 dates = get_value_list(historyDates, "date")
-
-                #newCases = select_specific_cases("casesWorld", "new", content)
-                #activeCases = select_specific_cases("casesWorld", "active", content)
-                #deaths = select_specific_cases("casesWorld", "deaths", content)
 
                 newCasesHistory = select_specific_cases("history", "new", content)
                 activeCasesHistory = select_specific_cases("history", "active", content)
@@ -110,8 +103,6 @@ def cases_history(content):
                 deathsHistoryList = get_value_list(deathsHistory, "deaths")
 
     return render_template('history.html', content=content, newCases=json.dumps(newCasesHistoryList), active=json.dumps(activeCasesHistoryList), newDeaths=json.dumps(deathsHistoryList), dates=json.dumps(dates))
-    #return render_template('history.html', context=content, newCases=newCases[0]['new'], maximumActive=activeCases[0]['active'], maximumDeaths=deaths[0]['deaths'], dates=dates)
-    #return render_template('history.html', context=content, newCases=maximumNew[0]['max("new")'], maximumActive=maximumActive[0]['max("active")'], maximumDeaths=maximumDeaths[0]['max("deaths")'])
 
 
 @app.route("/subscription", methods=["GET", "POST"])
@@ -166,6 +157,13 @@ def subscribe():
         countriesList = get_value_list(countries, "country")
 
         return render_template("subscription.html", countries=countriesList)
+
+
+@app.route("/usersTable")
+def usersTable():
+
+    users = select_all_users()
+    return render_template("usersTable.html", users=users)
 
 
 @app.route("/manageUsers", methods=["GET", "POST"])
@@ -226,7 +224,7 @@ def manageUsers():
 # set a background scheduler
 scheduler = BackgroundScheduler()
 # set a scheduler with interval 3 minute    
-job1 = scheduler.add_job(get_cases_world, 'interval', minutes=0.2)
+job1 = scheduler.add_job(get_cases_world, 'interval', minutes=10)
 # start the scheduler
 scheduler.start()
 
