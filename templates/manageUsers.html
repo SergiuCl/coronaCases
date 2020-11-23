@@ -23,7 +23,8 @@
 <br>
     {% if query == "create" %}
         <form class="text-center border border-light p-5" style="margin-right: 200px; margin-left: 200px;"   method="post">
-            <p class="h4 mb-4">{{ query }} {{ emailAddress }}</p>
+            <p class="h4 mb-4">create new user</p>
+            <br>
                 <div class="form-group">
                     <!-- Email -->
                     <input type="email" id="defaultLoginFormEmail"  name="email" class="form-control mb-4" placeholder="E-mail" required>
@@ -45,6 +46,7 @@
     {% elif query == "edit" %}
         <form class="text-center border border-light p-5" style="margin-right: 200px; margin-left: 200px;"  action="/manageUsers" method="post">
             <p class="h4 mb-4">{{ query }} {{ emailAddress }}</p>
+            <br>
             <input type="name" id="defaultLoginFormName" name="name" class="form-control mb-4" placeholder="First and Last Name">
             <br>
             <div id="selectCountry">

@@ -49,7 +49,6 @@ def show_item_info(content):
             content = row['content']
             contentImg = row['urlToImage']
 
-# https://pythonise.com/series/learning-flask/generating-dynamic-urls-with-flask        
     return render_template('news.html', content=content, i=contentImg)
 
 
@@ -217,64 +216,6 @@ def manageUsers(action, emailAddress):
         action = request.form.get("querys")
 
         return render_template("manageUsers.html", query=query, countries=countriesList, emailAddress=emailAddress)
-
-
-
-"""
-@app.route("/manageUsers/", methods=["GET", "POST"])
-def manageUsers():
-
-    if request.method == "POST":
-
-        # get the data from user
-        emailAdress = request.form.get("email")
-        action = request.form.get("querys")
-        name = request.form.get("name")
-        country = request.form.get("countries")
-
-        # ensure user provide an email and a name
-        if not emailAdress:
-            flash("Please provide an email")
-        else:
-            if action == "Update":
-                # check if user already exists
-                checkUser = select_user(emailAdress)
-                # check if query returns any values
-                if bool(checkUser):
-                    update_user(emailAdress, country)
-                    flash('The user has been successfully updated')
-                    return redirect(url_for('manageUsers'))
-                else:
-                    flash('The specified user does not exist')
-                    return redirect(url_for('manageUsers'))
-            elif action == "Create":
-                 # check if user already exists
-                checkUser = select_user(emailAdress)
-                """""" check if query returns any values
-                if yes, inform the user
-                else insert it into th table """"""
-                if bool(checkUser):
-                    flash('The specified user already exists')
-                    return redirect(url_for('manageUsers'))
-                else:
-                    insert_user(emailAdress, name, country)
-                    flash('The user has been successfully created')
-                    return redirect(url_for('manageUsers'))
-            else:
-                remove_user(emailAdress)
-                flash('The user has been successfully removed')
-                return redirect(url_for('manageUsers'))
-
-    else:    
-        querys = ['Create', 'Remove', 'Update']
-        countries = select_countries("casesWorld")
-        countriesList = []
-        countriesList = get_value_list(countries, "country")
-        action = request.form.get("querys")
-
-    return render_template("manageUsers.html", querys=querys, countries=countriesList)
-
-"""
 
 
 # set a background scheduler
