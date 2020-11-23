@@ -99,3 +99,17 @@ def update_name_country(userID, country, name):
     conn.close()
 
     return
+
+
+def delete_where_userID(userID):
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
+    format_str = """DELETE FROM subscribers WHERE subscriber_id="{userID}";"""
+    sql_command = format_str.format(userID=userID)
+    cursor.execute(sql_command)
+    conn.commit()
+    conn.close()
+
+    return

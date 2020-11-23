@@ -1,7 +1,7 @@
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from apscheduler.schedulers.background import BackgroundScheduler
 from coronaCasesDAO import select_cases, get_cases_world, select_cases_where_country, select_countries, select_history_for_country, select_distinct_data, select_maximum_cases, select_specific_cases
-from subscribeDAO import select_user, insert_user, remove_user, select_all_users, update_user, update_name_country
+from subscribeDAO import select_user, insert_user, remove_user, select_all_users, update_user, update_name_country, delete_where_userID
 from helpers import get_news, get_dict_news, dict_factory, get_value_list
 import requests
 import json
@@ -164,6 +164,14 @@ def usersTable():
     # get data for table
     users = select_all_users()
     return render_template("usersTable.html", users=users)
+
+
+@app.route("/usersTable/delete/<emailAddress>/<int:userID>")
+def deleteUser(emailAddress, userID):
+
+    # delete user from table based on url
+    delete_where_userID(userID)
+    return redirect(url_for('usersTable'))
 
 
 @app.route("/manageUsers/<action>/<emailAddress>/<int:userID>", methods=["GET", "POST"])

@@ -55,7 +55,8 @@
                             </td>
                             <td>
                                 {% set emailAddress = dict_item.get("emailAdress") %}
-                                <a class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+                                {% set userID = dict_item.get("subscriber_id") %}
+                                <a class="btn btn-danger" href="usersTable/delete/{{ emailAddress }}/{{ userID }}" onclick="myFunction()">Delete</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -69,5 +70,8 @@
         
                 }); 
             } );
+            function myFunction() {
+                confirm("Press a button!");
+            }
         </script>        
 {% endblock %}
