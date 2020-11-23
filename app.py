@@ -158,14 +158,12 @@ def subscribe():
         return render_template("subscription.html", countries=countriesList)
 
 
-@app.route("/usersTable", methods=["GET", "POST"])
+@app.route("/usersTable")
 def usersTable():
-    if request.method == "POST":
-        emailAddrress = request.form.get("emailAddress")
-        print(emailAddrress)
-    else: 
-        users = select_all_users()
-        return render_template("usersTable.html", users=users)
+
+    # get data for table
+    users = select_all_users()
+    return render_template("usersTable.html", users=users)
 
 
 @app.route("/manageUsers/<action>/<emailAddress>/<int:userID>", methods=["GET", "POST"])

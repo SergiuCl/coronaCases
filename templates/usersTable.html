@@ -19,6 +19,7 @@
                     <tr>
                         <th>Username</th>
                         <th>Email Address</th>
+                        <th>Country</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
@@ -43,6 +44,9 @@
                             </td>
                             <td>
                                 {{dict_item.get("emailAdress")}}
+                            </td>
+                            <td>
+                                {{dict_item.get("country")}}
                             </td>
                             <td>
                                 {% set emailAddress = dict_item.get("emailAdress") %}

@@ -86,6 +86,7 @@ def update_user(userID, country):
 
     return
 
+
 def update_name_country(userID, country, name):
 
     # Configure SQLite database
