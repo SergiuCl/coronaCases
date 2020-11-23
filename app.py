@@ -131,10 +131,10 @@ def subscribe():
                 checkUser = select_user(emailAdress)
                 if bool(checkUser):
                     remove_user(emailAdress)
-                    flash('You have successfully unsubscribed')
+                    flash('You have successfully unsubscribed', 'success')
                     return redirect(url_for('subscribe'))
                 else:
-                    flash('You are not a subscriber of our newsletter', 'success')
+                    flash('You are not a subscriber of our newsletter', 'info')
                     return redirect(url_for('subscribe'))
             else:
                 # check if user already exists
@@ -144,7 +144,7 @@ def subscribe():
                 # if yes, inform the user that he already subscribed
                 # else, insert the user info in the database
                 if bool(checkUser):
-                    flash('You have already subscribed to our newsletter')
+                    flash('You have already subscribed to our newsletter', 'info')
                     return redirect(url_for('subscribe'))
                 else:
                     insert_user(emailAdress, name, country)
@@ -198,11 +198,11 @@ def manageUsers(action, emailAddress, userID):
                 if yes, inform the user
                 else insert it into th table """
                 if bool(checkUser):
-                    flash('The specified user already exists')
+                    flash('The specified user already exists', "info")
                     return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress, userID=userID))
                 else:
                     insert_user(email, name, country)
-                    flash('The user has been successfully created')
+                    flash('The user has been successfully created', 'success')
                     return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress, userID=userID))
         elif action == "edit":
             # get the data from user
@@ -211,11 +211,11 @@ def manageUsers(action, emailAddress, userID):
 
             if not name:
                 update_user(userID, country)
-                flash('The user has been successfully updated')
+                flash('The user has been successfully updated', 'success')
                 return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress, userID=userID))
             else:
                 update_name_country(userID, country, name)
-                flash('The user has been successfully updated')
+                flash('The user has been successfully updated', 'success')
                 return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress, userID=userID))
     else:
         query = action
