@@ -1,7 +1,7 @@
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from apscheduler.schedulers.background import BackgroundScheduler
 from coronaCasesDAO import select_cases, get_cases_world, select_cases_where_country, select_countries, select_history_for_country, select_distinct_data, select_maximum_cases, select_specific_cases
-from subscribeDAO import select_user, insert_user, remove_user, select_all_users, update_user
+from subscribeDAO import select_user, insert_user, remove_user, select_all_users, update_user, update_name_country
 from helpers import get_news, get_dict_news, dict_factory, get_value_list
 import requests
 import json
@@ -172,13 +172,14 @@ def usersTable():
 def manageUsers(action, emailAddress):
     
     if request.method == "POST":
+
         if action == "create":
             # get the data from user
-            emailAdress = request.form.get("email")
+            email = request.form.get("email")
             name = request.form.get("name")
             country = request.form.get("countries")
             # ensure user provide an email and a name
-            if not emailAdress:
+            if not email:
                 flash("Please provide an email")
             elif not name:
                 flash("Please provide a name")
@@ -186,7 +187,7 @@ def manageUsers(action, emailAddress):
                 flash("Please choose a country")
             else:
                 # check if user already exists
-                checkUser = select_user(emailAdress)
+                checkUser = select_user(email)
                 """ check if query returns any values
                 if yes, inform the user
                 else insert it into th table """
@@ -194,19 +195,21 @@ def manageUsers(action, emailAddress):
                     flash('The specified user already exists')
                     return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
                 else:
-                    insert_user(emailAdress, name, country)
+                    insert_user(email, name, country)
                     flash('The user has been successfully created')
                     return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
         elif action == "edit":
-            # check if user already exists
-            checkUser = select_user(emailAdress)
-            # check if query returns any values
-            if bool(checkUser):
-                update_user(emailAdress, country)
+            # get the data from user
+            name = request.form.get("name")
+            country = request.form.get("countries")
+
+            if not name:
+                update_user(emailAddress, country)
                 flash('The user has been successfully updated')
                 return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
             else:
-                flash('The specified user does not exist')
+                update_name_country(emailAddress, country, name)
+                flash('The user has been successfully updated')
                 return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
     else:
         query = action

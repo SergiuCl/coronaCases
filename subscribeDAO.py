@@ -73,13 +73,29 @@ def select_all_users_where_country(country):
     return users
 
 
-def update_user(emailAdress, country):
+def update_user(emailAddress, country):
 
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
     cursor = conn.cursor()
-    format_str = """UPDATE subscribers SET country="{country}" WHERE emailAdress="{emailAdress}";"""
-    sql_command = format_str.format(country=country, emailAdress=emailAdress)
+    format_str = """UPDATE subscribers SET country="{country}" WHERE emailAdress="{emailAddress}";"""
+    sql_command = format_str.format(country=country, emailAddress=emailAddress)
+    cursor.execute(sql_command)
+    conn.commit()
+    conn.close()
+
+    return
+
+def update_name_country(emailAddress, country, name):
+    print(name)
+    print(country)
+    print(emailAddress)
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
+    format_str = """UPDATE subscribers SET country="{country}", Name="{name}" WHERE emailAdress="{emailAddress}";"""
+    sql_command = format_str.format(country=country, name=name, emailAddress=emailAddress)
     cursor.execute(sql_command)
     conn.commit()
     conn.close()
