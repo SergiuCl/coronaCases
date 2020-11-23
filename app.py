@@ -193,11 +193,11 @@ def manageUsers(action, emailAddress):
                 else insert it into th table """
                 if bool(checkUser):
                     flash('The specified user already exists')
-                    return redirect(url_for('manageUsers(action, emailAddress)'))
+                    return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
                 else:
                     insert_user(emailAdress, name, country)
                     flash('The user has been successfully created')
-                    return redirect(url_for('manageUsers'))
+                    return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
         elif action == "edit":
             # check if user already exists
             checkUser = select_user(emailAdress)
@@ -205,10 +205,10 @@ def manageUsers(action, emailAddress):
             if bool(checkUser):
                 update_user(emailAdress, country)
                 flash('The user has been successfully updated')
-                return redirect(url_for('manageUsers(action, emailAddress)'))
+                return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
             else:
                 flash('The specified user does not exist')
-                #return redirect(url_for('manageUsers(action, emailAddress)'))
+                return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
     else:
         query = action
         countries = select_countries("casesWorld")

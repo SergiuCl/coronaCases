@@ -50,7 +50,7 @@
                             </td>
                             <td>
                                 {% set emailAddress = dict_item.get("emailAdress") %}
-                                <a class="btn btn-danger" href="manageUsers/delete/{{ emailAddress }}">Delete</a>
+                                <a class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
                             </td>
                         </tr>
                     {% endfor %}
