@@ -168,8 +168,8 @@ def usersTable():
         return render_template("usersTable.html", users=users)
 
 
-@app.route("/manageUsers/<action>/<emailAddress>", methods=["GET", "POST"])
-def manageUsers(action, emailAddress):
+@app.route("/manageUsers/<action>/<emailAddress>/<int:userID>", methods=["GET", "POST"])
+def manageUsers(action, emailAddress, userID):
     
     if request.method == "POST":
 
@@ -193,24 +193,24 @@ def manageUsers(action, emailAddress):
                 else insert it into th table """
                 if bool(checkUser):
                     flash('The specified user already exists')
-                    return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
+                    return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress, userID=userID))
                 else:
                     insert_user(email, name, country)
                     flash('The user has been successfully created')
-                    return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
+                    return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress, userID=userID))
         elif action == "edit":
             # get the data from user
             name = request.form.get("name")
             country = request.form.get("countries")
 
             if not name:
-                update_user(emailAddress, country)
+                update_user(userID, country)
                 flash('The user has been successfully updated')
-                return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
+                return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress, userID=userID))
             else:
-                update_name_country(emailAddress, country, name)
+                update_name_country(userID, country, name)
                 flash('The user has been successfully updated')
-                return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress))
+                return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress, userID=userID))
     else:
         query = action
         countries = select_countries("casesWorld")
