@@ -49,7 +49,7 @@ def show_item_info(content):
             content = row['content']
             contentImg = row['urlToImage']
 
-    return render_template('news.html', content=content, i=contentImg)
+    return render_template('news.html', content=content, i=contentImg, title=row['title'])
 
 
 @app.route("/casesInAustria")
