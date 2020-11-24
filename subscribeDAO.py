@@ -17,6 +17,7 @@ def select_user(tableName, emailAdress):
 
 
 def select_user_where_email(tableName, emailAdress):
+
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
     conn.row_factory = dict_factory
@@ -28,6 +29,23 @@ def select_user_where_email(tableName, emailAdress):
     # close the connection
     conn.close()
     return user
+
+
+def select_user_where_userID(tableName, userID):
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
+    cursor = conn.cursor()
+    format_str = """SELECT * FROM "{table}" WHERE user_id="{userID}";"""
+    sql_command = format_str.format(table=tableName, userID=userID)
+    cursor.execute(sql_command)
+    user = cursor.fetchall()
+    # close the connection
+    conn.close()
+    return user
+
+
 
 def insert_user(emailAdress, name, country):
     

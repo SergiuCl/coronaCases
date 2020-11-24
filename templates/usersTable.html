@@ -27,7 +27,7 @@
                 <tfoot>
                     <tr>
                         <td>
-                            <a class="btn btn-success" href="manageUsers/create/newUser/0">Create User</a>
+                            <a href="manageUsers/create/newUser/0"><button class="btn btn-success" {{disabled}}>Create User</button></a>
                         </td>
                         <td></td>
                         <td></td>
@@ -51,13 +51,13 @@
                             <td>
                                 {% set emailAddress = dict_item.get("emailAdress") %}
                                 {% set userID = dict_item.get("subscriber_id") %}
-                                <a class="btn btn-info" href="manageUsers/edit/{{ emailAddress }}/{{ userID }}">Edit</a>
+                                <a href="manageUsers/edit/{{ emailAddress }}/{{ userID }}"><button class="btn btn-info" {{disabled}}>Edit</button></a>
                             </td>
                             <td>
                                 {% set emailAddress = dict_item.get("emailAdress") %}
                                 {% set userID = dict_item.get("subscriber_id") %}
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" {{disabled}}>
                                     Delete
                                 </button>
                                 <!-- Modal -->
@@ -65,7 +65,7 @@
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">Delete {{ emailAddress }}</h5>
+                                        <h5 class="modal-title" id="exampleModalLongTitle" {{disabled}}>Delete {{ emailAddress }}</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>

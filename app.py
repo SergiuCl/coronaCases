@@ -3,7 +3,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from apscheduler.schedulers.background import BackgroundScheduler
 from coronaCasesDAO import select_cases, get_cases_world, select_cases_where_country, select_countries, select_history_for_country, select_distinct_data, select_maximum_cases, select_specific_cases
-from subscribeDAO import select_user, insert_user, remove_user, select_all_users, update_user, update_name_country, delete_where_userID, select_user_where_email, isert_user_into_users
+from subscribeDAO import select_user, insert_user, remove_user, select_all_users, update_user, update_name_country, delete_where_userID, select_user_where_email, isert_user_into_users, select_user_where_userID
 from helpers import get_news, get_dict_news, dict_factory, get_value_list, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
@@ -25,7 +25,6 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 # Ensure responses aren't cached
 @app.after_request
 def after_request(response):
-
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
@@ -50,30 +49,30 @@ def Index():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-    # Forget any user_id
-    session.clear()
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
+        
+        # Forget any user_id
+        session.clear()
         # get email Address from user
         email = request.form.get("email")
 
         # query database for email    
         rows = select_user_where_email('users', email)
 
-        # check if user exists
-        # if yes, check psw
+        """check if user exists
+        if yes, check psw"""
         if bool(rows):
             if not check_password_hash(rows[0]["hash"], request.form.get("password")):
-                flash('invalid password', 'error')
+                flash('Invalid password', 'error')
                 return redirect(url_for('login'))
         else:
-            flash('user does not exist', 'error')
+            flash('User does not exist', 'error')
             return redirect(url_for('login'))
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["user_id"]
-
         # Redirect user to users panel
         return redirect(url_for('usersTable'))
         # User reached route via GET (as by clicking a link or via redirect)
@@ -95,7 +94,9 @@ def logout():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
+
     if request.method == "POST":
+        # get info from user
         emailAddress = request.form.get("email")
         password = request.form.get("password")
         name = request.form.get("name")
@@ -107,11 +108,12 @@ def register():
             flash('Email Address already exists', 'info')
             return redirect(url_for('register'))
         else:
+            # check if password is correct
             if passwordConfirm != password:
                 flash('Please check your password', 'info')
                 return redirect(url_for('register'))
             
-            # hash password
+            # hash password and enter the user with role user in db
             hashPsw = generate_password_hash(password)
             role = 'user'
             isert_user_into_users('users', emailAddress, name, hashPsw, role)
@@ -128,8 +130,8 @@ def show_item_info(content):
     mylist = get_dict_news()
     contentImg = None
     title = None
-    # for every row in dict
-    # ensure content corresponds to title
+    """for every row in dict
+    ensure content corresponds to title"""
     for row in mylist:
         if content in row['title']:
             content = row['content']
@@ -166,9 +168,12 @@ def casesWorld():
 def cases_history(content):
 
     tblHistory = "history"
+    # get all the cases from table
     tableValues = select_cases("casesWorld")
     if bool(tableValues):
+        
         for row in tableValues:
+            # look for cases for country from route
             if content in row['country']:
                 content = row['country']
                 # get the dates for the chart
@@ -176,11 +181,11 @@ def cases_history(content):
                 dates = []
                 # append the dates to the list dates
                 dates = get_value_list(historyDates, "date")
-
+                # get the cases
                 newCasesHistory = select_specific_cases("history", "new", content)
                 activeCasesHistory = select_specific_cases("history", "active", content)
                 deathsHistory = select_specific_cases("history", "deaths", content)
-
+                # create the lists for the html table
                 newCasesHistoryList = []
                 newCasesHistoryList = get_value_list(newCasesHistory, "new")
                 activeCasesHistoryList = []
@@ -210,8 +215,8 @@ def subscribe():
         elif not country:
             flash("Please choose a country")
         else:
-            # if user checked the box unsubscribe
-            # remove user from table
+            """if user checked the box unsubscribe
+            remove user from table"""
             if unsubscribe:
                 # check if user exists
                 # if exists, inform him
@@ -227,9 +232,9 @@ def subscribe():
                 # check if user already exists
                 checkUser = select_user('subscribers', emailAdress)
 
-                # check if query returns any values
-                # if yes, inform the user that he already subscribed
-                # else, insert the user info in the database
+                """check if query returns any values
+                if yes, inform the user that he already subscribed
+                else, insert the user info in the database"""
                 if bool(checkUser):
                     flash('You have already subscribed to our newsletter', 'info')
                     return redirect(url_for('subscribe'))
@@ -238,6 +243,8 @@ def subscribe():
                     flash('You have successfully subscribed', 'success')
                     return redirect(url_for('subscribe'))
     else:
+
+        # get all the countries and print them in drop down list
         countries = select_countries("casesWorld")
         countriesList = []
         countriesList = get_value_list(countries, "country")
@@ -249,22 +256,29 @@ def subscribe():
 @login_required
 def usersTable():
 
-    # get data for table
+    # get data from table
     users = select_all_users()
+    # check if user has an admin role
+    loggedUser = select_user_where_userID('users', session["user_id"])
+    if loggedUser[0]['role'] != 'admin':
+        return render_template("usersTable.html", users=users, disabled='disabled')
+
     return render_template("usersTable.html", users=users)
 
 
 @app.route("/usersTable/delete/<emailAddress>/<int:userID>")
+@login_required
 def deleteUser(emailAddress, userID):
 
-    # delete user from table based on url
+    # delete user from table
     delete_where_userID(userID)
     return redirect(url_for('usersTable'))
 
 
 @app.route("/manageUsers/<action>/<emailAddress>/<int:userID>", methods=["GET", "POST"])
+@login_required
 def manageUsers(action, emailAddress, userID):
-    
+
     if request.method == "POST":
 
         if action == "create":
@@ -272,6 +286,7 @@ def manageUsers(action, emailAddress, userID):
             email = request.form.get("email")
             name = request.form.get("name")
             country = request.form.get("countries")
+
             # ensure user provide an email and a name
             if not email:
                 flash("Please provide an email")
@@ -280,6 +295,7 @@ def manageUsers(action, emailAddress, userID):
             elif not country:
                 flash("Please choose a country")
             else:
+
                 # check if user already exists
                 checkUser = select_user('subscribers', email)
                 """ check if query returns any values
@@ -293,10 +309,13 @@ def manageUsers(action, emailAddress, userID):
                     flash('The user has been successfully created', 'success')
                     return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress, userID=userID))
         elif action == "edit":
+
             # get the data from user
             name = request.form.get("name")
             country = request.form.get("countries")
-
+            
+            """if no name provided, update only the country
+            else update both of them"""
             if not name:
                 update_user(userID, country)
                 flash('The user has been successfully updated', 'success')
@@ -305,7 +324,9 @@ def manageUsers(action, emailAddress, userID):
                 update_name_country(userID, country, name)
                 flash('The user has been successfully updated', 'success')
                 return redirect(url_for('manageUsers', action=action, emailAddress=emailAddress, userID=userID))
+
     else:
+        
         query = action
         countries = select_countries("casesWorld")
         countriesList = []

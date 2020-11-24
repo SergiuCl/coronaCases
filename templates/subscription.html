@@ -3,6 +3,9 @@
 {% block title %}
     Subscribe
 {% endblock %}
+{% block headSergiu %}
+    <link rel="stylesheet" href="mystyle.css">
+{% endblock %}
 
 {% block main %}
 
@@ -10,17 +13,17 @@
   {% if messages %}
     {% for category, message in messages %}
         {% if category == "error" %}
-            <div style="background-color: rgb(245, 215, 215); margin-right: 200px; margin-left: 200px;">{{ message }}</div>
+            <div style="background-color: rgb(245, 215, 215); margin-right: 400px; margin-left: 400px;">{{ message }}</div>
         {% elif category == "success" %}
-            <div style="background-color: rgb(204, 255, 229); margin-right: 200px; margin-left: 200px;">{{ message }}</div>
+            <div style="background-color: rgb(204, 255, 229); margin-right: 400px; margin-left: 400px;">{{ message }}</div>
         {% elif category == "info" %}
-            <div style="background-color: rgb(255, 255, 204); margin-right: 200px; margin-left: 200px;">{{ message }}</div>
+            <div style="background-color: rgb(255, 255, 204); margin-right: 400px; margin-left: 400px;">{{ message }}</div>
         {% endif %}
     {% endfor %}
   {% endif %}
 {% endwith %}
-
-<form class="text-center border border-light p-5" style="margin-right: 700px; margin-left: 700px;" action="/subscription" method="post">
+<br><br>
+<form class="text-center border border-light p-5" style="margin-right: 400px; margin-left: 400px;" action="/subscription" method="post">
     <p class="h4 mb-4">Subscribe</p>
     <div class="form-group">
         <!-- Email -->
