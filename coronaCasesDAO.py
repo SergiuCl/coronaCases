@@ -1,4 +1,4 @@
-from helpers import get_API_News_austria, get_API_News_world, convert_to_int, dict_factory
+from helpers import get_API_News_austria, get_API_News_world, convert_to_int, dict_factory, connect_to_db
 from datetime import date
 from mail import email_to_subscribers
 from contextlib import closing
@@ -44,7 +44,7 @@ def update_cases_world(APIData):
 def insert_query(APIData):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     cursor = conn.cursor()
     currDate = date.today()
     countryList = []
@@ -77,7 +77,7 @@ def insert_query(APIData):
 def insert_into_history(APIData):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     cursor = conn.cursor()
     today = date.today()
     tblHistory = "history"
@@ -118,7 +118,7 @@ def insert_into_history(APIData):
 def update_query_world(APIData):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     cursor = conn.cursor()
     currDate = date.today()
     countryList = []
@@ -160,7 +160,7 @@ def update_query_world(APIData):
 def select_cases(tableName):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM "{table}";"""
@@ -177,7 +177,7 @@ def select_cases(tableName):
 def select_cases_where_country(tableName, country):
     
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT country, active, new, deaths, totalCases, totalDeaths, totalRecovered, date FROM "{table}" WHERE country="{countryName}";"""
@@ -193,7 +193,7 @@ def select_cases_where_country(tableName, country):
 def select_cases_where_country_date(tableName, country, date):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT * FROM "{table}" WHERE country="{countryName}" AND date="{dateUnix}";"""
@@ -209,7 +209,7 @@ def select_cases_where_country_date(tableName, country, date):
 def select_countries(tableName):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT country FROM "{table}" ORDER BY country;"""
@@ -225,7 +225,7 @@ def select_countries(tableName):
 def select_history_for_country(tableName, country):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT * FROM "{table}" WHERE country="{country}";"""
@@ -241,7 +241,7 @@ def select_history_for_country(tableName, country):
 def select_distinct_data(tableName):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT DISTINCT date FROM "{table}";"""
@@ -257,7 +257,7 @@ def select_distinct_data(tableName):
 def select_maximum_cases(tableName ,cases, country):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT max("{cases}") FROM "{table}" WHERE country="{country}" AND "{cases}" <>"";"""
@@ -273,7 +273,7 @@ def select_maximum_cases(tableName ,cases, country):
 def select_specific_cases(tableName, cases, country):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT "{cases}" FROM "{table}" WHERE country="{country}";"""

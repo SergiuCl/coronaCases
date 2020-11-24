@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from string import Template
 from subscribeDAO import select_all_users, select_all_users_where_country
-from helpers import dict_factory
+from helpers import dict_factory, connect_to_db
 import sqlite3
 
 
@@ -15,7 +15,7 @@ import sqlite3
 def email_to_subscribers(countryList):
 
   # Configure SQLite database
-  conn = sqlite3.connect('coronaDatabase.db')
+  conn = connect_to_db()
   conn.row_factory = dict_factory
   cursor = conn.cursor()
 

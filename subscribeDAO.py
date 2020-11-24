@@ -1,10 +1,11 @@
 import sqlite3
-from helpers import dict_factory
+from helpers import dict_factory, connect_to_db
 
 
 def select_user(tableName, emailAdress):
+
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT * FROM "{table}" WHERE emailAdress="{email}";"""
@@ -19,7 +20,7 @@ def select_user(tableName, emailAdress):
 def select_user_where_email(tableName, emailAdress):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT * FROM "{table}" WHERE emailAdress="{email}";"""
@@ -34,7 +35,7 @@ def select_user_where_email(tableName, emailAdress):
 def select_user_where_userID(tableName, userID):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT * FROM "{table}" WHERE user_id="{userID}";"""
@@ -50,7 +51,7 @@ def select_user_where_userID(tableName, userID):
 def insert_user(emailAdress, name, country):
     
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     cursor = conn.cursor()
     format_str = """INSERT INTO subscribers (emailAdress, name, country) VALUES("{email}", "{name}", "{country}");"""
     sql_command = format_str.format(email=emailAdress, name=name, country=country)
@@ -64,7 +65,7 @@ def insert_user(emailAdress, name, country):
 def isert_user_into_users(tableName, emailAddress, name, hashPsw, role):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     cursor = conn.cursor()
     format_str = """INSERT INTO "{table}" (emailAdress, name, hash, role) VALUES("{email}", "{name}", "{hash}", "{role}");"""
     sql_command = format_str.format(table=tableName, email=emailAddress, name=name, hash=hashPsw, role=role)
@@ -78,7 +79,7 @@ def isert_user_into_users(tableName, emailAddress, name, hashPsw, role):
 def remove_user(emailAdress):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     cursor = conn.cursor()
     format_str = """DELETE FROM subscribers WHERE emailAdress="{email}";"""
     sql_command = format_str.format(email=emailAdress)
@@ -92,7 +93,7 @@ def remove_user(emailAdress):
 def select_all_users():
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     sql_command = """SELECT * FROM subscribers"""
@@ -106,7 +107,7 @@ def select_all_users():
 def select_all_users_where_country(country):
     
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     conn.row_factory = dict_factory
     cursor = conn.cursor()
     format_str = """SELECT * FROM subscribers WHERE country="{country}";"""
@@ -121,7 +122,7 @@ def select_all_users_where_country(country):
 def update_user(userID, country):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     cursor = conn.cursor()
     format_str = """UPDATE subscribers SET country="{country}" WHERE subscriber_id="{userID}";"""
     sql_command = format_str.format(country=country, userID=userID)
@@ -135,7 +136,7 @@ def update_user(userID, country):
 def update_name_country(userID, country, name):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     cursor = conn.cursor()
     format_str = """UPDATE subscribers SET country="{country}", Name="{name}" WHERE subscriber_id="{userID}";"""
     sql_command = format_str.format(country=country, name=name, userID=userID)
@@ -149,7 +150,7 @@ def update_name_country(userID, country, name):
 def delete_where_userID(userID):
 
     # Configure SQLite database
-    conn = sqlite3.connect('coronaDatabase.db')
+    conn = connect_to_db()
     cursor = conn.cursor()
     format_str = """DELETE FROM subscribers WHERE subscriber_id="{userID}";"""
     sql_command = format_str.format(userID=userID)

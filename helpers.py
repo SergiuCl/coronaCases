@@ -3,6 +3,14 @@ from functools import wraps
 from flask import redirect, render_template, request, session
 import http.client
 import json
+import sqlite3
+
+
+def connect_to_db():
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    return conn
 
 
 def get_news():
