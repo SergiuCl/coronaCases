@@ -35,10 +35,10 @@ def update_cases_world(APIData):
             return
         else:
             update_query_world(APIData)
-           # insert_into_history(APIData)
+           insert_into_history(APIData)
     else:
         insert_query(APIData)
-       # insert_into_history(APIData)
+       insert_into_history(APIData)
 
 
 def insert_query(APIData):
