@@ -61,9 +61,14 @@ def login():
         # query database for email    
         rows = select_user_where_email('users', email)
 
-        # Ensure email exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            flash('invalid username and/or password', 'error')
+        # check if user exists
+        # if yes, check psw
+        if bool(rows):
+            if not check_password_hash(rows[0]["hash"], request.form.get("password")):
+                flash('invalid password', 'error')
+                return redirect(url_for('login'))
+        else:
+            flash('user does not exist', 'error')
             return redirect(url_for('login'))
 
         # Remember which user has logged in
@@ -103,8 +108,8 @@ def register():
             return redirect(url_for('register'))
         else:
             if passwordConfirm != password:
-                flash('Please confirm your password', 'error')
-                return(url_for('register'))
+                flash('Please check your password', 'info')
+                return redirect(url_for('register'))
             
             # hash password
             hashPsw = generate_password_hash(password)
