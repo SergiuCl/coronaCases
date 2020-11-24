@@ -56,7 +56,7 @@
                             <td>
                                 {% set emailAddress = dict_item.get("emailAdress") %}
                                 {% set userID = dict_item.get("subscriber_id") %}
-                                <a class="btn btn-danger" href="usersTable/delete/{{ emailAddress }}/{{ userID }}" onclick="myFunction()">Delete</a>
+                                <a class="btn btn-danger" href="usersTable/delete/{{ emailAddress }}/{{ userID }}" onclick = "{if (confirm ( 'The user will be permanently deleted')) {this. document.formname.submit (); return true;} return false;} ">Delete</a>
                             </td>
                         </tr>
                     {% endfor %}
