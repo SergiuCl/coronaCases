@@ -32,8 +32,29 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <div class="collapse navbar-collapse" style="font-family: 'Open Sans', sans-serif;" id="navbarSupportedContent">
+        {% if session.user_id %}
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/casesInAustria">Cases in Austria</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/casesWorld">Check by country</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/subscription">Subscribe</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/usersTable">Users Panel</a>
+            </li>
+          </ul>
+            <ul class="navbar-nav ml-auto mt-2">
+              <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+          </ul>
+        {% else %}
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
             <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
@@ -51,6 +72,11 @@
             <a class="nav-link" href="/usersTable">Users Panel</a>
           </li>
         </ul>
+          <ul class="navbar-nav ml-auto mt-2">
+            <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+            <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+        </ul>
+        {% endif %}
       </div>
     </nav>
 <br />

@@ -1,8 +1,12 @@
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
+from flask_session import Session
+from tempfile import mkdtemp
 from apscheduler.schedulers.background import BackgroundScheduler
 from coronaCasesDAO import select_cases, get_cases_world, select_cases_where_country, select_countries, select_history_for_country, select_distinct_data, select_maximum_cases, select_specific_cases
-from subscribeDAO import select_user, insert_user, remove_user, select_all_users, update_user, update_name_country, delete_where_userID
-from helpers import get_news, get_dict_news, dict_factory, get_value_list
+from subscribeDAO import select_user, insert_user, remove_user, select_all_users, update_user, update_name_country, delete_where_userID, select_user_where_email, isert_user_into_users
+from helpers import get_news, get_dict_news, dict_factory, get_value_list, login_required
+from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 import requests
 import json
 import time, threading
@@ -28,12 +32,88 @@ def after_request(response):
     return response
 
 
+# Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_FILE_DIR"] = mkdtemp()
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+
 @app.route("/")
 def Index():
     
     # get API News
     mylist = get_news()
     return render_template('index.html', context = mylist)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Log user in"""
+    # Forget any user_id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        # get email Address from user
+        email = request.form.get("email")
+
+        # query database for email    
+        rows = select_user_where_email('users', email)
+
+        # Ensure email exists and password is correct
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            flash('invalid username and/or password', 'error')
+            return redirect(url_for('login'))
+
+        # Remember which user has logged in
+        session["user_id"] = rows[0]["user_id"]
+
+        # Redirect user to users panel
+        return redirect(url_for('usersTable'))
+        # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """Register user"""
+    if request.method == "POST":
+        emailAddress = request.form.get("email")
+        password = request.form.get("password")
+        name = request.form.get("name")
+        passwordConfirm = request.form.get("confirmation")
+
+        # check if username exists in db
+        checkUser = select_user('users', emailAddress)
+        if bool(checkUser):
+            flash('Email Address already exists', 'info')
+            return redirect(url_for('register'))
+        else:
+            if passwordConfirm != password:
+                flash('Please confirm your password', 'error')
+                return(url_for('register'))
+            
+            # hash password
+            hashPsw = generate_password_hash(password)
+            role = 'user'
+            isert_user_into_users('users', emailAddress, name, hashPsw, role)
+            flash('You have been succesfully registered')
+            return redirect(url_for('usersTable'))
+    else:
+        return render_template("register.html")
 
 
 @app.route("/news/<content>")
@@ -130,7 +210,7 @@ def subscribe():
             if unsubscribe:
                 # check if user exists
                 # if exists, inform him
-                checkUser = select_user(emailAdress)
+                checkUser = select_user('subscribers', emailAdress)
                 if bool(checkUser):
                     remove_user(emailAdress)
                     flash('You have successfully unsubscribed', 'success')
@@ -140,7 +220,7 @@ def subscribe():
                     return redirect(url_for('subscribe'))
             else:
                 # check if user already exists
-                checkUser = select_user(emailAdress)
+                checkUser = select_user('subscribers', emailAdress)
 
                 # check if query returns any values
                 # if yes, inform the user that he already subscribed
@@ -161,6 +241,7 @@ def subscribe():
 
 
 @app.route("/usersTable")
+@login_required
 def usersTable():
 
     # get data for table
@@ -195,7 +276,7 @@ def manageUsers(action, emailAddress, userID):
                 flash("Please choose a country")
             else:
                 # check if user already exists
-                checkUser = select_user(email)
+                checkUser = select_user('subscribers', email)
                 """ check if query returns any values
                 if yes, inform the user
                 else insert it into th table """

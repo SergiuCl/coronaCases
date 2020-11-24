@@ -2,19 +2,32 @@ import sqlite3
 from helpers import dict_factory
 
 
-def select_user(emailAdress):
+def select_user(tableName, emailAdress):
     # Configure SQLite database
     conn = sqlite3.connect('coronaDatabase.db')
     conn.row_factory = dict_factory
     cursor = conn.cursor()
-    format_str = """SELECT * FROM subscribers WHERE emailAdress="{email}";"""
-    sql_command = format_str.format(email=emailAdress)
+    format_str = """SELECT * FROM "{table}" WHERE emailAdress="{email}";"""
+    sql_command = format_str.format(table=tableName, email=emailAdress)
     cursor.execute(sql_command)
     user = cursor.fetchall()
     # close the connection
     conn.close()
     return user
 
+
+def select_user_where_email(tableName, emailAdress):
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    conn.row_factory = dict_factory
+    cursor = conn.cursor()
+    format_str = """SELECT * FROM "{table}" WHERE emailAdress="{email}";"""
+    sql_command = format_str.format(table=tableName, email=emailAdress)
+    cursor.execute(sql_command)
+    user = cursor.fetchall()
+    # close the connection
+    conn.close()
+    return user
 
 def insert_user(emailAdress, name, country):
     
@@ -23,6 +36,20 @@ def insert_user(emailAdress, name, country):
     cursor = conn.cursor()
     format_str = """INSERT INTO subscribers (emailAdress, name, country) VALUES("{email}", "{name}", "{country}");"""
     sql_command = format_str.format(email=emailAdress, name=name, country=country)
+    cursor.execute(sql_command)
+    conn.commit()
+    # close the connection
+    conn.close()
+    return
+
+
+def isert_user_into_users(tableName, emailAddress, name, hashPsw, role):
+
+    # Configure SQLite database
+    conn = sqlite3.connect('coronaDatabase.db')
+    cursor = conn.cursor()
+    format_str = """INSERT INTO "{table}" (emailAdress, name, hash, role) VALUES("{email}", "{name}", "{hash}", "{role}");"""
+    sql_command = format_str.format(table=tableName, email=emailAddress, name=name, hash=hashPsw, role=role)
     cursor.execute(sql_command)
     conn.commit()
     # close the connection

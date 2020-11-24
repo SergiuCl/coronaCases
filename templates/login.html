@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+
+{% block main %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+        {% if category == "error" %}
+            <div style="background-color: rgb(245, 215, 215); margin-right: 200px; margin-left: 200px;">{{ message }}</div>
+        {% elif category == "success" %}
+            <div style="background-color: rgb(204, 255, 229); margin-right: 200px; margin-left: 200px;">{{ message }}</div>
+        {% elif category == "info" %}
+            <div style="background-color: rgb(255, 255, 204); margin-right: 200px; margin-left: 200px;">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+    <br><br>
+    <h3 class="my-2" style="text-align: center; font-family: 'Open Sans', sans-serif;">Log In</h3>
+    <br><br>
+    <form action="/login" method="post" style="margin-right: 700px; margin-left: 700px;">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="email" placeholder="Email Address" type="text" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Log In</button>
+    </form>
+{% endblock %}
