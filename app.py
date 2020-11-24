@@ -229,7 +229,7 @@ def manageUsers(action, emailAddress, userID):
 
 # set a background scheduler
 scheduler = BackgroundScheduler()
-# set a scheduler with interval 3 minute    
+# set a scheduler with interval 10 minutes  
 job1 = scheduler.add_job(get_cases_world, 'interval', minutes=10)
 # start the scheduler
 scheduler.start()
