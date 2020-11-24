@@ -42,6 +42,7 @@ def show_item_info(content):
     # get news in dictionary
     mylist = get_dict_news()
     contentImg = None
+    title = None
     # for every row in dict
     # ensure content corresponds to title
     for row in mylist:
