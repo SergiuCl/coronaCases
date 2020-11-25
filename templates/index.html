@@ -8,11 +8,11 @@
     {% block main %}
     <p style="text-align: center; font-family: 'Roboto', sans-serif; font-size: 30px;">Corona News Austria</p>
     <br> <br><br><br>
-      <div class="row" style="margin-right: 550px; margin-left: 550px;">
+      <div class="row" style="margin: auto; width:900px;">
         {% for news, des, i, content in context %}
-          <div class="col-sm-5 col-md-6 item-zoom">
+          <div class="col-sm-5 col-md-6">
             <a href="/news/{{ news }}" target="_blank">
-              <div class="item-zoom">
+              <div>
                 <img src="{{i}}" alt="" class="img-fluid img-thumbnail">
               </div>
             </a>

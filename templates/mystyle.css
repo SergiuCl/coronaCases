@@ -1,4 +1,4 @@
-#margin400px {
-	margin-right: 200px;
-	margin-left: 200px;
+.margin900 {
+	margin: auto;
+	width: 900px;
 }

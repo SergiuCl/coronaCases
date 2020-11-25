@@ -11,8 +11,11 @@
 {% endblock %}
 
 {% block main %}
+<br>
+<h3 class="my-2" style="text-align: center; font-family: 'Open Sans', sans-serif;">Manage Subscribers</h3>
+<br><br>
     <div class="col">
-        <div style="margin-right: 200px; margin-left: 200px;">
+        <div style="margin:auto; width:1700px;">
         
             <table id="example" class="table table-striped " style="width: 100%;" >
                 <thead>
@@ -36,7 +39,7 @@
                     
                 </tfoot>
                 <tbody>
-                <form class="text-center border border-light p-5" style="margin-right: 200px; margin-left: 200px;" action="/usersTable" method="post">
+                <form class="text-center border border-light p-5" action="/usersTable" method="post">
                     {% for dict_item in users %}
                         <tr>
                             <td>
