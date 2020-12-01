@@ -2,9 +2,9 @@ Corona Virus Project
 
 
 My program is a web application developed in Flask using SQL, HTML, CSS and JavaScript.
-The web application contains information about the new Corona virus in the world and is focused on Austria, the country where I currently live.
+The web application contains regularly updated information about the new Corona virus situation around the world and is focused on Austria, the country where I currently live.
 
-On the main page are displayed the latest news in Austria via an API from https://newsapi.org/. All the news are displayed in a HTML table and each news contains an image, title, a short description and a link that redirects the user to another HTML page when clicked. This page shows the image, title, content of the news and a frame with Corona Cases in Austria. The news are updated every 10 minutes using a Background Scheduler.
+On the main page are displayed the latest news in Austria via an API from https://newsapi.org/. All of them are displayed in a HTML table and each news contains an image, title, a short description and a link that redirects the user to another HTML page when clicked. This page shows the image, title, content and a frame with Corona Cases in Austria. The news are updated every 10 minutes using a Background Scheduler.
 
 The next page is called "Cases In Austria". An HTML table is displayed on this page that stores the latest Corona cases in Austria, which were received from an API called "COVID-19 Tracking" from https://rapidapi.com/. Using the Background Scheduler, the program checks every 10 minutes whether there are any updates in the API. If so, the information is inserted into a database called "coronaDatabase". The cell with the name of the country contains a link that redirects the user to another HTML page when clicked. The page is called "history/(name of country)" and pictures some charts with the daily Corona Cases evolution in Austria: New Cases, New Deaths and Active Cases. The number of daily cases is stored in the database "coronaDatabase".
 
