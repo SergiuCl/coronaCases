@@ -1,7 +1,7 @@
 Corona Virus Project
 
 
-My program is a web application created in Flask using SQL, HTML, CSS and JavaScript.
+My program is a web application developed in Flask using SQL, HTML, CSS and JavaScript.
 The web application contains information about the new Corona virus in the world and is focused on Austria, the country where I currently live.
 
 On the main page are displayed the latest news in Austria via an API from https://newsapi.org/. All the news are displayed in a HTML table and each news contains an image, title, a short description and a link that redirects the user to another HTML page when clicked. This page displays the image, title, content of the news and a frame with Corona Cases in Austria. The news are updated every 10 minutes using a Background Scheduler.
