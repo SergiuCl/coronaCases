@@ -1,8 +1,8 @@
-Corona Virus Project
+# Corona Virus Project
 
 
 My program is a web application developed in Flask using SQL, HTML, CSS and JavaScript.
-The web application contains regularly updated information about the new Corona virus situation around the world and is focused on Austria, the country where I currently live.
+The web application contains regulary updated information about the new Corona virus situation around the world and is focused on Austria, the country where I currently live.
 
 On the main page are displayed the latest news in Austria via an API from https://newsapi.org/. All of them are displayed in a HTML table and each news contains an image, title, a short description and a link that redirects the user to another HTML page when clicked. This page shows the image, title, content and a frame with Corona Cases in Austria. The news are updated every 10 minutes using a Background Scheduler.
 
@@ -10,6 +10,6 @@ The next page is called "Cases In Austria". An HTML table is displayed on this p
 
 The next page is called "Ccheck by country" and is very similar to "Cases In Austria". The difference is that this page displays all countries worldwide. Every single cell with the name of the country contains a link that redirects the user to the page "history/(name of country)", which pictures the charts with the daily Corona cases evolution in that country. Using the Background Scheduler, the program checks every 10 minutes whether there are any updates in the API. If so, the information is inserted into the database.
 
-The next page is called "Subscribe". On this page the user can enter his email address and name and select a country from which he would like to get updates from. There is also the option to unsubscribe. The users will receive an email via SendGrid with new and active cases every time the selected country is updated. The users are saved in the database.
+The next page is called "Subscribe". On this page the user can enter his email address and name and select a country from which he would like to get updates from. If the user already exists, he will be notified, otherwise he will be entered in the database. There is also the option to unsubscribe. The users will receive an email via SendGrid with new and active cases every time the selected country will update. The users are saved in the database.
 
-The next and the last page is called "Subscribers Panel". This page requires the users to be signed in when they click the link. After the user signs in, an HTML table appears on the page "usersTable" that contains information about the subscribers. If the user has an admin role, he can edit and delete the existing users and also create new users. If the user has read-only role, the edit, delete and create buttons are disabled.
+The next and the last page is called "Subscribers Panel". This page requires the users to be logged in when they click the link. After the user signs in, an HTML table appears on the page "usersTable" that contains information about the subscribers. If the user has an admin role, he can edit and delete the existing users and also create new users. If the user has read-only role, the edit, delete and create buttons are disabled.
