@@ -13,7 +13,7 @@
 
 ## **Installation**
 
-* Use the package manager pip to install the requirements. Write the following in your terminal.
+* Use the package manager pip to install the requirements. Write the following in your terminal:
 ```bash
 pip install -r requirements.txt
 ```
@@ -21,7 +21,7 @@ pip install -r requirements.txt
 
 ## **Run Program**
 
-* Write the following in your terminal to start the program.
+* Write the following in your terminal to start the program:
 
     * Linux/macOS
     ```bash
@@ -57,7 +57,7 @@ pip install -r requirements.txt
 ## **Technologies**
 
 * The web application is created with:
-    <br/>
+
     * Flask
     * SQLite3
     * HTML
@@ -69,6 +69,7 @@ pip install -r requirements.txt
 ## Sources
 
 * The following sources were used to create the web application:
+
     * https://newsapi.org/
     * https://rapidapi.com/
     * https://www.highcharts.com/
