@@ -1,4 +1,4 @@
-# Coronavirus Project
+# **Coronavirus Project**
 
 
 
@@ -41,18 +41,18 @@ pip install -r requirements.txt
 
 ### Technologies
 
-- The web application is created with:
-* Flask
-* SQLITE3
-* HTML
-* CSS
-* JavaScript
+* The web application is created with:
+    * Flask
+    * SQLITE3
+    * HTML
+    * CSS
+    * JavaScript
 
 
 
 ### Sources
 
-- The following sources were used to create the web application:
-* https://newsapi.org/
-* https://rapidapi.com/
-* https://www.highcharts.com/
+* The following sources were used to create the web application:
+    * https://newsapi.org/
+    * https://rapidapi.com/
+    * https://www.highcharts.com/
