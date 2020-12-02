@@ -3,6 +3,7 @@
 
 ## **Summary**
 * [Installation](#installation)
+* [Run Program](#run-program)
 * [Introduction](#introduction)
 * [Technologies](#technologies)
 * [Sources](#sources)
@@ -15,6 +16,20 @@
 ```bash
 pip install -r requirements.txt
 ```
+<br/>
+
+## **Run Program**
+
+* Write the following in your terminal to start the program.
+    * Linux/macOS
+    ```bash
+    python3 -m flask run
+    ```
+    * Windows
+    ```bash
+    python -m flask run
+    ```
+
 <br/>
 
 ## **Introduction**
