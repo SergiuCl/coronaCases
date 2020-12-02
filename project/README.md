@@ -22,6 +22,7 @@ pip install -r requirements.txt
 ## **Run Program**
 
 * Write the following in your terminal to start the program.
+
     * Linux/macOS
     ```bash
     python3 -m flask run
