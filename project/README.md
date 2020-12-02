@@ -2,7 +2,7 @@
 
 
 
-## Summary
+## **Summary**
 * [Installation](#installation)
 * [Introduction](#introduction)
 * [Technologies](#technologies)
@@ -11,7 +11,7 @@
 
 
 
-### Installation
+### **Installation**
 
 * Use the package manager pip to install the requirements. Write the following in your terminal.
 ```bash
@@ -19,13 +19,13 @@ pip install -r requirements.txt
 ```
 
 
-### Introduction
+### **Introduction**
 
 * Coronavirus Project is a web application developed in Flask. The web application contains regularly updated information about the new Coronavirus situation around the world and is focused on Austria, the country where I currently live.
 
 
 
-### Description
+### **Description**
 
 * The main page displays the latest news in Austria via an API from https://newsapi.org/. All of them are displayed in an HTML table and each news contains an image, title, a short description and a link that redirects the user to  another HTML page when clicked. This page shows the image, title, content and a frame with Corona Cases in Austria. The news are updated every 10 minutes using a Background Scheduler.
 
@@ -37,11 +37,12 @@ pip install -r requirements.txt
 
 * The next and the last page is called "Subscribers Panel". This page requires the users to be logged in when they click the link. After the user signs in, an HTML table appears on the page "usersTable" that contains information about the subscribers. If the user has an admin role, he can edit and delete the existing users and also create new users. If the user has read-only role, the edit, delete and create buttons are disabled.
 
+<br/><br/><br/><br/><br/>
 
-
-### Technologies
+### **Technologies**
 
 * The web application is created with:
+
     * Flask
     * SQLITE3
     * HTML
@@ -53,6 +54,7 @@ pip install -r requirements.txt
 ### Sources
 
 * The following sources were used to create the web application:
+
     * https://newsapi.org/
     * https://rapidapi.com/
     * https://www.highcharts.com/
