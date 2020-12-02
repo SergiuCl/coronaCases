@@ -11,7 +11,7 @@
 
 ## **Installation**
 
-* Use the package manager *pip* to install the requirements. Write the following in your terminal.
+* Use the package manager pip to install the requirements. Write the following in your terminal.
 ```bash
 pip install -r requirements.txt
 ```
