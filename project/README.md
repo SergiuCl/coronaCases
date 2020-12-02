@@ -13,7 +13,7 @@
 
 ### Installation
 
-Use the package manager pip to install the requirements. Write the following in your terminal.
+* Use the package manager pip to install the requirements. Write the following in your terminal.
 ```bash
 pip install -r requirements.txt
 ```
@@ -21,7 +21,7 @@ pip install -r requirements.txt
 
 ### Introduction
 
-Coronavirus Project is a web application developed in Flask. The web application contains regularly updated information about the new Coronavirus situation around the world and is focused on Austria, the country where I currently live.
+* Coronavirus Project is a web application developed in Flask. The web application contains regularly updated information about the new Coronavirus situation around the world and is focused on Austria, the country where I currently live.
 
 
 
@@ -41,7 +41,7 @@ Coronavirus Project is a web application developed in Flask. The web application
 
 ### Technologies
 
-The web application is created with:
+- The web application is created with:
 * Flask
 * SQLITE3
 * HTML
@@ -52,7 +52,7 @@ The web application is created with:
 
 ### Sources
 
-The following sources were used to create the web application:
+- The following sources were used to create the web application:
 * https://newsapi.org/
 * https://rapidapi.com/
 * https://www.highcharts.com/
