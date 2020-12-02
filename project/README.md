@@ -1,9 +1,9 @@
 # Corona Virus Project
 
-
-## Installation
-## Introduction
-## Technologies
+### Summary
+* [Installation](#installation)
+* [Introduction](#introduction)
+* [Technologies](#technologies)
 
 
 ### Installation
