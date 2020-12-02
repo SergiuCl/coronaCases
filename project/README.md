@@ -1,5 +1,8 @@
 # Corona Virus Project
 
+* Introduction
+* Requirements
+* Installation
 
 My program is a web application developed in Flask using SQL, HTML, CSS and JavaScript.
 The web application contains regulary updated information about the new Corona virus situation around the world and is focused on Austria, the country where I currently live.
