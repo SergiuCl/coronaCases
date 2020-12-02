@@ -1,11 +1,23 @@
 # Corona Virus Project
 
 * Introduction
-* Requirements
 * Installation
 
+
+
+### Installation
+
+Use the package manager pip to install the requirements.
+```bash
+pip install -r requirements.txt
+```
+
+
 ### Introduction
+
 My program is a web application developed in Flask. The web application contains regulary updated information about the new Corona virus situation around the world and is focused on Austria, the country where I currently live.
+
+
 
 On the main page are displayed the latest news in Austria via an API from https://newsapi.org/. All of them are displayed in a HTML table and each news contains an image, title, a short description and a link that redirects the user to another HTML page when clicked. This page shows the image, title, content and a frame with Corona Cases in Austria. The news are updated every 10 minutes using a Background Scheduler.
 
