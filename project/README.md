@@ -42,7 +42,7 @@ pip install -r requirements.txt
 * The web application is created with:
     <br/>
     * Flask
-    * SQLITE3
+    * SQLite3
     * HTML
     * CSS
     * JavaScript
