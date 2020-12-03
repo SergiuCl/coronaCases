@@ -32,6 +32,7 @@ pip install -r requirements.txt
     ```bash
     python -m flask run
     ```
+    
 
 <br/>
 
