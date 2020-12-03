@@ -2,3 +2,4 @@ flask
 newsapi-python
 apscheduler
 flask_session
+gunicorn
