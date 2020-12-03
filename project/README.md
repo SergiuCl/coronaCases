@@ -36,7 +36,7 @@ pip install -r requirements.txt
 
 ## **Introduction**
 
-* Coronavirus Project is a web application developed in Flask. The web application contains regularly updated information about the new Coronavirus situation around the world and is focused on Austria, the country where I currently live.
+* Coronavirus Project is a web application developed in Flask. The web application contains regularly updated information about the new Coronavirus situation around the world with focus on Austria, the country where I currently live.
 
 <br/>
 
