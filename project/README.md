@@ -72,5 +72,5 @@ pip install -r requirements.txt
 
     * https://newsapi.org/
     * https://rapidapi.com/
-    * https://www.highcharts.com/
     * https://sendgrid.com/
+    * https://www.highcharts.com/
